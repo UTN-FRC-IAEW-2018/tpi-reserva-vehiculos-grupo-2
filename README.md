@@ -12,9 +12,10 @@
 cd tp-api
 dotnet run
 ```
+Se puede acceder desde [http://localhost:5000](http://localhost:5000). El ejemplo inicial del proyecto es [http://localhost:5000/api/values](http://localhost:5000/api/values).
 
 ## Cliente web (React.js)
-Instalado con [create-react-app](https://github.com/facebook/create-react-app)
+Instalado con [create-react-app](https://github.com/facebook/create-react-app).
 
 ### Requerimientos
 * [Node.js](https://nodejs.org/es/)
@@ -24,5 +25,6 @@ Instalado con [create-react-app](https://github.com/facebook/create-react-app)
 cd tp-web
 npm start
 ```
+Se puede acceder desde [http://localhost:3000](http://localhost:3000).
 
 
