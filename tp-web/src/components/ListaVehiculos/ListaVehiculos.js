@@ -26,6 +26,16 @@ class ListaVehiculos extends Component {
     this.loadVehiculos();
   }
 
+  reservar(id){
+    api.post('/api/reservas/', { id: id })
+      .then(res => {
+        this.props.history.push('reservas');
+      })
+      .catch((error) => {
+        this.setState({ error: "Hubo un problema al cargar su información." });
+      })
+  }
+
 
   render() {
     const listaVehiculos = this.state.vehiculos.map((v) =>
@@ -34,6 +44,9 @@ class ListaVehiculos extends Component {
         <td>{v.nombre}</td>
         <td>{v.descripcion}</td>
         <td>{v.precio}</td>
+        <button type="button" class="btn btn-warning" onClick={() => this.reservar(v.id)}>
+          Reservar
+        </button>
       </tr>
     );
     return (
@@ -48,6 +61,7 @@ class ListaVehiculos extends Component {
                 <th scope="col">Nombre</th>
                 <th scope="col">Descripción</th>
                 <th scope="col">Precio</th>
+                <th scope="col"></th>
             </tr>
             </thead>
             <tbody>
