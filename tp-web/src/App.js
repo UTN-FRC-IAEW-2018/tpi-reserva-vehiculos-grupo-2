@@ -6,6 +6,11 @@ import VerReserva from './components/VerReserva/VerReserva';
 import './App.css';
 
 class App extends Component {
+
+  login(){
+    return undefined;
+  }
+
   render() {
     return (
       <Router>
@@ -28,6 +33,7 @@ class App extends Component {
                 </li>
               </ul>
             </div>
+            <button className="btn btn-success" onPress={this.login()}>Iniciar sesión</button>
           </nav>
           <main role="main" class="container">
             <Route exact path="/" component={Home} />
