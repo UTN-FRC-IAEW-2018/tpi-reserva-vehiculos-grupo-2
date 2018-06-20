@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using SOAP_Serv;
 
 namespace tp_api.Controllers
 {
@@ -13,6 +14,14 @@ namespace tp_api.Controllers
         [HttpGet]
         public IEnumerable<string> Get()
         {
+            var service = new SOAP_Serv.WCFReservaVehiculosClient();
+            var credentials = new SOAP_Serv.Credentials();
+            credentials.UserName = "grupo_nro2";
+            credentials.Password = "crkVYDPh";
+            ConsultarPaisesResponse1 result = service.ConsultarPaisesAsync(credentials).Result;
+
+            
+
             return new string[] { "value1", "value2" };
         }
 
