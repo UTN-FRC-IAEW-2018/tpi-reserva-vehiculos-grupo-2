@@ -5,6 +5,7 @@ import api from '../../api';
 class ListaVehiculos extends Component {
   constructor(props) {
     super(props);
+    if (!localStorage.getItem("token")) { this.props.history.push('')}
     this.state = {
       vehiculos: [{id: 1, nombre: 'Algo', descripcion: 'Algo más', precio: '$230'}],
       error: undefined

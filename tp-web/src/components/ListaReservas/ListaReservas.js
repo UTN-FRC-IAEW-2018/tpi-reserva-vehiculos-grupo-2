@@ -6,6 +6,7 @@ import './ListaReservas.css';
 class ListaReservas extends Component {
   constructor(props) {
     super(props);
+    if (!localStorage.getItem("token")) { this.props.history.push('')}
     this.state = {
       reservas: [{id: 1, nombre: 'Algo', descripcion: 'Algo más', precio: '$230'}],
       error: undefined

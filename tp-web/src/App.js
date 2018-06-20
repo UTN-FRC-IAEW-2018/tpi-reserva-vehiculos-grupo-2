@@ -7,8 +7,23 @@ import './App.css';
 
 class App extends Component {
 
-  login(){
-    return undefined;
+  constructor(props){
+    super(props);
+    this.state = {
+      isAuthenticated: localStorage.getItem("token")
+    }
+    this.login = this.login.bind(this);
+    this.logout = this.logout.bind(this);
+  }
+
+  login() {
+    localStorage.setItem("token", "aja");
+    this.setState({ isAuthenticated: true });
+  }
+
+  logout() {
+    localStorage.removeItem("token");
+    this.setState({ isAuthenticated: false });
   }
 
   render() {
@@ -21,19 +36,28 @@ class App extends Component {
               <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-              <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                  <Link className="nav-link" to="/">Inicio</Link>
-                </li>
-                <li class="nav-item">
-                  <Link className="nav-link" to="/vehiculos">Vehículos</Link>
-                </li>
-                <li class="nav-item">
-                  <Link className="nav-link" to="/reservas">Reservas</Link>
-                </li>
-              </ul>
+            {
+              this.state.isAuthenticated &&
+                  <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                      <Link className="nav-link" to="/">Inicio</Link>
+                    </li>
+                    <li class="nav-item">
+                      <Link className="nav-link" to="/vehiculos">Vehículos</Link>
+                    </li>
+                    <li class="nav-item">
+                      <Link className="nav-link" to="/reservas">Reservas</Link>
+                    </li>
+                  </ul>
+            }
             </div>
-            <button className="btn btn-success" onPress={this.login()}>Iniciar sesión</button>
+            {
+              !this.state.isAuthenticated ? (
+                <button className="btn btn-success" onClick={this.login}>Iniciar sesión</button>
+              ) : (
+                <button className="btn btn-warning" onClick={this.logout}>Cerrar sesión</button>
+              )
+            }
           </nav>
           <main role="main" class="container">
             <Route exact path="/" component={Home} />
@@ -50,7 +74,7 @@ class App extends Component {
 const Home = () => (
     <div class="starter-template">
       <h1>TP - IAEW - 2018</h1>
-      <p class="lead">React.js + .NET Core WebAPI</p>`
+      <p class="lead">Inicie sesión para ingresar al sistema.</p>`
     </div>
 );
 
