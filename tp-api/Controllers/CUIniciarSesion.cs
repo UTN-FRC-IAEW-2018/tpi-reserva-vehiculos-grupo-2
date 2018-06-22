@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using Microsoft.AspNetCore.Mvc;
 using RestSharp;
@@ -20,22 +21,26 @@ namespace tp_api.Controllers {
 			throw new System.Exception("Not implemented");
 		}
 
-		[Route("api/auth/token")]
-		public string VerificarUsuarioYPassword(string token) {
-			//if (Us)
-			return null;
-		}
-		public string GetCorreoUsuario(string token) {
-			var client = new RestClient("http://ec2-54-87-197-49.compute-1.amazonaws.com/v1/oauth/introspect");
-			var request = new RestRequest(Method.POST);
-			request.AddHeader("Postman-Token", "5523331f-1aaa-4a88-b461-42abc91193be");
-			request.AddHeader("Cache-Control", "no-cache");
-			request.AddHeader("Content-Type", "application/x-www-form-urlencoded");
-			request.AddParameter("undefined", "token=" + token + "&token_type_hint=access_token", ParameterType.RequestBody);
-			IRestResponse response = client.Execute(request);
-			return response.Content;
-		}
-		public void CrearUsuario() {
+		[Route("api/auth/user")]
+        [HttpGet("{code}")]
+        public JsonResult Get(string code)
+        {
+            var client = new RestClient("http://ec2-54-87-197-49.compute-1.amazonaws.com/v1/oauth/tokens");
+            var request = new RestRequest(Method.POST);
+            //request.AddHeader("Postman-Token", "4f489d7e-596e-4335-b6c3-2beed8ccb791");
+            request.AddHeader("Authorization", "Basic dGVzdF9jbGllbnRfMTp0ZXN0X3NlY3JldA==");
+            request.AddHeader("Content-Type", "application/x-www-form-urlencoded");
+            request.AddParameter("undefined", $"grant_type=authorization_code&code={code}&redirect_uri=https%3A%2F%2Fwww.example.com", ParameterType.RequestBody);
+            IRestResponse response = client.Execute(request);
+            
+            //dESSERIALIZAR.
+
+
+            return new JsonResult(response.Content);
+        }
+
+
+        public void CrearUsuario() {
 			throw new System.Exception("Not implemented");
 		}
 		public void CrearCliente() {

@@ -42,27 +42,6 @@ namespace tp_api.Controllers
         [HttpGet("{code}")]
         public JsonResult Get(string code)
         {
-            /*
-            HttpClient client = new HttpClient();
-
-            var values = new Dictionary<string, string>
-            {
-                { "grant_type", "authorization_code" },
-                { "redirect_uri", "http://localhost:3000/callback" },
-                { "code",code }
-            };
-
-            var content = new FormUrlEncodedContent(values);
-            content.Headers.Add("Authorization", "Basic dGVzdF9jbGllbnRfMTp0ZXN0X3NlY3JldA==");
-            content.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
-            
-            
-            var response = client.PostAsync("http://ec2-54-87-197-49.compute-1.amazonaws.com/v1/oauth/tokens", content).Result;
-
-            var responseString = response.Content.ReadAsStringAsync().Result;
-
-            return responseString;
-            */
             var client = new RestClient("http://ec2-54-87-197-49.compute-1.amazonaws.com/v1/oauth/tokens");
             var request = new RestRequest(Method.POST);
             //request.AddHeader("Postman-Token", "4f489d7e-596e-4335-b6c3-2beed8ccb791");
