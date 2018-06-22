@@ -1,10 +1,14 @@
 using System;
-namespace LogicaDeNegocio {
+using System.Collections.Generic;
+
+namespace Models {
 	public class Cliente {
-		private int nroDocumento;
-		private string nombre;
-		private string apellido;
-		private List<Reserva> reservas;
+		
+		public int ClienteId { get; set; }
+		public int NroDocumento { get; set; }
+		public string Nombre { get; set; }
+		public string Apellido { get; set; }
+/*		private List<Reserva> reservas;
 		private Usuario usuario;
 
 		public Cliente() {
@@ -31,7 +35,7 @@ namespace LogicaDeNegocio {
 		public void BuscarReserva(ref Reserva res) {
 			throw new System.Exception("Not implemented");
 		}
-
+*/
 	}
 
 }
