@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using Models;
 namespace Models
 {
-    public class BloggingContext : DbContext
+    public class Context : DbContext
     {        
         public DbSet<Cliente> Clientes { get; set; }
 
         // https://docs.microsoft.com/en-us/ef/core/get-started/netcore/new-db-sqlite
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+         public Context(DbContextOptions<Context> options)
+            : base(options)
         {
-            optionsBuilder.UseSqlite("Data Source=iaew.db");
         }
     }
 }

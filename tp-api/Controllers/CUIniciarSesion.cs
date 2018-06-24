@@ -3,10 +3,18 @@ using System;
 using Microsoft.AspNetCore.Mvc;
 using RestSharp;
 using tp_api.InterfacesREST;
+using tp_api.Controllers;
+using Models;
 
 namespace tp_api.Controllers {
 	public class CUIniciarSesion : Controller, RESTIniciarSesion  {
 
+		private readonly Context _context;
+
+        public CUIniciarSesion(Context context)
+        {
+            _context = context;
+		}
 		[Route("api/auth/login")]
 		public string IniciarSesion() {
 			// Retorna ruta de login de OAuth
@@ -25,6 +33,33 @@ namespace tp_api.Controllers {
         [HttpGet("{code}")]
         public JsonResult Get(string code)
         {
+			throw new NotImplementedException();
+			/*
+			string usuario = "";
+			var token = GetToken(code); // Pedir token
+			var usuarioOAuth = GetUsuarioOAuth(token); // Hacer inspect a OAuth
+			Cliente cliente = GetCliente(mail); // En base al mail ver si está registrado
+			if (cliente == null) {
+				cliente = CrearCliente(); // Registrar si no está registrado
+			}
+			// Falta agregarle al token a lo que se devuelve a la SPA.
+			return new JsonResult(usuario);
+			 */
+        }
+
+        private Cliente GetCliente(string mail)
+        {
+            ClientesController cont = new ClientesController(_context);
+			return cont.GetByEmail(mail);
+        }
+
+        private object GetUsuarioOAuth(object token)
+        {
+            throw new NotImplementedException();
+        }
+
+        private object GetToken(string code)
+        {
             var client = new RestClient("http://ec2-54-87-197-49.compute-1.amazonaws.com/v1/oauth/tokens");
             var request = new RestRequest(Method.POST);
             //request.AddHeader("Postman-Token", "4f489d7e-596e-4335-b6c3-2beed8ccb791");
@@ -39,20 +74,16 @@ namespace tp_api.Controllers {
             return new JsonResult(response.Content);
         }
 
-
-        public void CrearUsuario() {
-			throw new System.Exception("Not implemented");
-		}
-		public void CrearCliente() {
+		public Cliente CrearCliente() {
 			throw new System.Exception("Not implemented");
 		}
 
 		public void InicioExitoso(ref string mensaje) { 
-			throw new System.Exception("Not implemented");
+			
 		}
 
 		public void InicioFallido(ref string mensaje) {
-			throw new System.Exception("Not implemented");
+			
 		}
 
 	}

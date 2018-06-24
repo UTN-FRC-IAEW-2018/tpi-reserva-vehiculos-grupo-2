@@ -7,7 +7,7 @@ using Models;
 
 namespace tpapi.Migrations
 {
-    [DbContext(typeof(BloggingContext))]
+    [DbContext(typeof(Context))]
     [Migration("20180622192241_InitialCreate")]
     partial class InitialCreate
     {
