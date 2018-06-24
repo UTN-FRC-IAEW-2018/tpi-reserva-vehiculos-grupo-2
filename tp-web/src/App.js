@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import ListaVehiculos from './components/ListaVehiculos/ListaVehiculos';
 import ListaReservas from './components/ListaReservas/ListaReservas';
 import VerReserva from './components/VerReserva/VerReserva';
+import RegistrarCliente from './components/RegistrarCliente/RegistrarCliente';
 import CallbackOAuth from './components/CallbackOAuth/CallbackOAuth';
 import api from './api';
 import './App.css';
@@ -74,6 +75,7 @@ class App extends Component {
             <Route path="/reservas" component={ListaReservas}/>
             <Route path="/reserva" component={VerReserva}/>
             <Route path="/callback" component={CallbackOAuth}/>
+            <Route path="/registrar-cliente" component={RegistrarCliente}/>
           </main>
         </div>
       </Router>
