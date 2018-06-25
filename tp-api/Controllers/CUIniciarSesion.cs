@@ -42,12 +42,12 @@ namespace tp_api.Controllers {
 		}
 
 		[HttpGet("{code}"), Route("user")]
-        public JsonResult Get(string code)
+        public IActionResult Get(string code)
         {
             if (Request.Method != "GET")
-            {
                 return Json("No era aca");
-            }
+            if (code == null)
+                return BadRequest("Por aca no. Sin codigo");
             var token = GetToken(code); // Pedir token
             
 			var usuarioOAuth = GetUsuarioOAuth(token); // Hacer inspect a OAuth
@@ -75,15 +75,34 @@ namespace tp_api.Controllers {
             
         }
 
-        [Route("user"), HttpPost()]
-        public IActionResult Post(Usuario asdf)
+        [Route("user/{email}")]
+        public IActionResult GetByMail(string email)
         {
-            
-            var jo = new JObject();
-            jo["email"] = "ad";
-            jo["token"] = "qwer";
-            return Json(jo);
+            var con = new UsuariosController(_context);
+            var us = con.Get(email);
+            if (us == null)
+                return NotFound();
+            return Json(us);
         }
+
+        [Produces("application/json")]
+        [Route("user"), HttpPost()]
+        public IActionResult Post([FromBody] Usuario input)
+        {
+            var usuarios = new UsuariosController(_context);
+            var usuario = usuarios.Get(input.Email, input.AccessToken);
+            if(usuario == null)
+                return NotFound("Usuario no encontrado");
+
+            usuario.Nombre = input.Nombre;
+            usuario.Apellido = input.Apellido;
+            usuario.DNI = input.DNI;
+            usuario.Username = input.Username;
+            _context.SaveChanges();
+
+            return Json(usuario);
+        }
+        
 
         private Cliente GetCliente(string mail)
         {

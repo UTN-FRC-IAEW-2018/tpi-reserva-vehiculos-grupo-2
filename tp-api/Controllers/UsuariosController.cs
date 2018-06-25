@@ -45,6 +45,16 @@ namespace tp_api.Controllers
             return us;
 
         }
+
+        public Usuario Get(string email, string token)
+        {
+            return _context.Usuarios.Where(x => x.Email == email && x.AccessToken == token).FirstOrDefault();
+        }
+
+        public Usuario Get(string email)
+        {
+            return _context.Usuarios.Where(x => x.Email == email).FirstOrDefault();
+        }
     }
 
 
