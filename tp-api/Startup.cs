@@ -28,6 +28,7 @@ namespace tp_api
             services.AddDbContext<Context>(opt => 
                 opt.UseSqlite("Data Source=iaew.db"));
             services.AddMvc();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

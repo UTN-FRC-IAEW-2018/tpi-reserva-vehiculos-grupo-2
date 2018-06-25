@@ -28,6 +28,7 @@ namespace tp_api.Controllers
         public Cliente GetByEmail(string email)
         {
             var item = _context.Clientes.Find(email);
+            
             return item;
         } 
 

@@ -1,50 +1,86 @@
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using Microsoft.AspNetCore.Mvc;
 using RestSharp;
 using tp_api.InterfacesREST;
 using tp_api.Controllers;
 using Models;
+using Clases;
 
 namespace tp_api.Controllers {
-	public class CUIniciarSesion : Controller, RESTIniciarSesion  {
+    [Route("api/auth")]
+    public class CUIniciarSesion : Controller, RESTIniciarSesion  {
 
 		private readonly Context _context;
+
+        private string redirect_url = "http%3A%2F%2Flocalhost:3000%2Fcallback";
+        private string local_redirect_url = "http%3A%2F%2Flocalhost:14089%2Fapi%2Fauth%2Fuser";
+
 
         public CUIniciarSesion(Context context)
         {
             _context = context;
 		}
-		[Route("api/auth/login")]
-		public string IniciarSesion() {
+		[Route("login")]
+		public ActionResult IniciarSesion() {
 			// Retorna ruta de login de OAuth
 			string cliente = "grupo_nro2_client";
-			string redirectUri = "http://localhost:3000/callback";
-			return "http://ec2-54-87-197-49.compute-1.amazonaws.com/web/authorize?" +
-						"client_id=" + cliente + "&redirect_uri=" + redirectUri +
-							"&response_type=code&state=somestate&scope=read_write";
+			//string redirectUri = "http://localhost:3000/callback";
+            string url = "http://ec2-54-87-197-49.compute-1.amazonaws.com/web/authorize?" +
+                        "client_id=" + cliente + "&redirect_uri=" + local_redirect_url +
+                            "&response_type=code&state=somestate&scope=read_write";
+
+
+            return Redirect(url);
+            //return url;
 		}
 
 		public string InicioExitoso() {
 			throw new System.Exception("Not implemented");
 		}
 
-		[Route("api/auth/user")]
-        [HttpGet("{code}")]
+		[HttpGet("{code}"), Route("user")]
         public JsonResult Get(string code)
         {
-			throw new NotImplementedException();
-			/*
-			string usuario = "";
-			var token = GetToken(code); // Pedir token
+            if (Request.Method == "POST")
+            {
+                return Json("No era aca");
+            }
+            var token = GetToken(code); // Pedir token
+            
 			var usuarioOAuth = GetUsuarioOAuth(token); // Hacer inspect a OAuth
-			Cliente cliente = GetCliente(mail); // En base al mail ver si está registrado
-			if (cliente == null) {
-				cliente = CrearCliente(); // Registrar si no está registrado
-			}
-			// Falta agregarle al token a lo que se devuelve a la SPA.
-			return new JsonResult(usuario);
-			 */
+
+            var controller = new UsuariosController(_context);
+            var user = controller.GetByOAuth(usuarioOAuth);
+
+            JObject res = new JObject();
+
+            res["email"] = user.Email;
+            res["token"] = user.AccessToken;
+            if (user.Username == null)
+                res["nuevo"] = true;
+            else
+            {
+                res["nuevo"] = false;
+                res["dni"] = user.DNI;
+                res["nombre"] = user.Nombre;
+                res["username"] = user.Username;
+                res["apellido"] = user.Apellido;
+            }
+            
+
+            return Json(res);
+            
+        }
+
+        [HttpPost("api/auth/update")]
+        private ActionResult Post([FromBody]string value)
+        {
+            var jo = new JObject();
+            jo["email"] = "ad";
+            jo["token"] = "qwer";
+            return null;
         }
 
         private Cliente GetCliente(string mail)
@@ -53,25 +89,55 @@ namespace tp_api.Controllers {
 			return cont.GetByEmail(mail);
         }
 
-        private object GetUsuarioOAuth(object token)
+
+
+
+        // metodos privados
+        private OAuthUser GetUsuarioOAuth(Token token)
         {
-            throw new NotImplementedException();
+            var client = new RestClient("http://ec2-54-87-197-49.compute-1.amazonaws.com/v1/oauth/introspect");
+            var request = new RestRequest(Method.POST);
+
+            request.AddHeader("Authorization", "Basic Z3J1cG9fbnJvMl9jbGllbnQ6dGVzdF9zZWNyZXQ=");
+            request.AddHeader("Content-Type", "application/x-www-form-urlencoded");
+
+            request.AddParameter("application/x-www-form-urlencoded", $"token_type_hint=access_token&token={token.TokenAccess}", ParameterType.RequestBody);
+
+            IRestResponse response = client.Execute(request);
+
+            var jo = JObject.Parse(response.Content);
+            token.Active = jo.Value<bool>("active");
+
+            DateTime exp = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            exp = exp.AddSeconds(jo.Value<long>("exp"));
+            token.Expires = exp;
+
+            var user = new OAuthUser();
+            user.Token = token;
+            user.Username = jo.GetValue("username").ToString();
+            
+
+            return user;
         }
 
-        private object GetToken(string code)
+        private Token GetToken(string code)
         {
             var client = new RestClient("http://ec2-54-87-197-49.compute-1.amazonaws.com/v1/oauth/tokens");
             var request = new RestRequest(Method.POST);
-            //request.AddHeader("Postman-Token", "4f489d7e-596e-4335-b6c3-2beed8ccb791");
-            request.AddHeader("Authorization", "Basic dGVzdF9jbGllbnRfMTp0ZXN0X3NlY3JldA==");
+
+            request.AddHeader("Authorization", "Basic Z3J1cG9fbnJvMl9jbGllbnQ6dGVzdF9zZWNyZXQ=");
             request.AddHeader("Content-Type", "application/x-www-form-urlencoded");
-            request.AddParameter("undefined", $"grant_type=authorization_code&code={code}&redirect_uri=https%3A%2F%2Fwww.example.com", ParameterType.RequestBody);
+
+            request.AddParameter("application/x-www-form-urlencoded", $"grant_type=authorization_code&code={code}&redirect_uri={local_redirect_url}", ParameterType.RequestBody);
+
             IRestResponse response = client.Execute(request);
             
-            //dESSERIALIZAR.
+            var obj = JObject.Parse(response.Content);
+            var t = new Token();
+            t.TokenAccess = obj.GetValue("access_token").ToString();
+            t.Refresh = obj.GetValue("refresh_token").ToString();
 
-
-            return new JsonResult(response.Content);
+            return t;
         }
 
 		public Cliente CrearCliente() {
@@ -85,6 +151,7 @@ namespace tp_api.Controllers {
 		public void InicioFallido(ref string mensaje) {
 			
 		}
+
 
 	}
 
