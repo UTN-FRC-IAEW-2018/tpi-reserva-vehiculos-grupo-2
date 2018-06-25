@@ -23,20 +23,25 @@ namespace tp_api.Controllers {
             _context = context;
 		}
 		[Route("login")]
-		public ActionResult IniciarSesion() {
+		public string IniciarSesion() {
 			// Retorna ruta de login de OAuth
 			string cliente = "grupo_nro2_client";
-			//string redirectUri = "http://localhost:3000/callback";
             string url = "http://ec2-54-87-197-49.compute-1.amazonaws.com/web/authorize?" +
                         "client_id=" + cliente + "&redirect_uri=" + local_redirect_url +
                             "&response_type=code&state=somestate&scope=read_write";
-
-
-            return Redirect(url);
-            //return url;
+            return url;
 		}
+        [Route("oauth")]
+        public ActionResult OAuth()
+        {
+            string cliente = "grupo_nro2_client";
+            string url = "http://ec2-54-87-197-49.compute-1.amazonaws.com/web/authorize?" +
+                        "client_id=" + cliente + "&redirect_uri=" + local_redirect_url +
+                            "&response_type=code&state=somestate&scope=read_write";
+            return Redirect(url);
+        }
 
-		public string InicioExitoso() {
+        public string InicioExitoso() {
 			throw new System.Exception("Not implemented");
 		}
 
@@ -74,7 +79,7 @@ namespace tp_api.Controllers {
             
         }
 
-        [HttpPost("api/auth/update")]
+        [HttpPost, Route("user")]
         private ActionResult Post([FromBody]string value)
         {
             var jo = new JObject();
