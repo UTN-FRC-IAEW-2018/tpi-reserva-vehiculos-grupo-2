@@ -34,11 +34,7 @@ namespace tp_api.Controllers {
         [Route("oauth")]
         public ActionResult OAuth()
         {
-            string cliente = "grupo_nro2_client";
-            string url = "http://ec2-54-87-197-49.compute-1.amazonaws.com/web/authorize?" +
-                        "client_id=" + cliente + "&redirect_uri=" + local_redirect_url +
-                            "&response_type=code&state=somestate&scope=read_write";
-            return Redirect(url);
+            return Redirect(IniciarSesion());
         }
 
         public string InicioExitoso() {
@@ -48,7 +44,7 @@ namespace tp_api.Controllers {
 		[HttpGet("{code}"), Route("user")]
         public JsonResult Get(string code)
         {
-            if (Request.Method == "POST")
+            if (Request.Method != "GET")
             {
                 return Json("No era aca");
             }
@@ -79,13 +75,14 @@ namespace tp_api.Controllers {
             
         }
 
-        [HttpPost, Route("user")]
-        private ActionResult Post([FromBody]string value)
+        [Route("user"), HttpPost()]
+        public IActionResult Post(Usuario asdf)
         {
+            
             var jo = new JObject();
             jo["email"] = "ad";
             jo["token"] = "qwer";
-            return null;
+            return Json(jo);
         }
 
         private Cliente GetCliente(string mail)
