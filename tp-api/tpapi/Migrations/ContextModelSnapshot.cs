@@ -27,6 +27,8 @@ namespace Migrations
 
                     b.Property<int>("NroDocumento");
 
+                    b.Property<int>("UsuarioId");
+
                     b.HasKey("ClienteId");
 
                     b.ToTable("Clientes");

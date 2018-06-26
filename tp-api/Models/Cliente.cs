@@ -8,8 +8,10 @@ namespace Models {
 		public int NroDocumento { get; set; }
 		public string Nombre { get; set; }
 		public string Apellido { get; set; }
-/*		private List<Reserva> reservas;
-		private Usuario usuario;
+		public int UsuarioId { get; set; }
+		public Usuario Usuario { get; set; }
+/*
+		private List<Reserva> reservas;
 
 		public Cliente() {
 			throw new System.Exception("Not implemented");

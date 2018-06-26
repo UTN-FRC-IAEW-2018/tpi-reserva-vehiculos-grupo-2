@@ -32,5 +32,11 @@ namespace tp_api.Controllers
             return item;
         } 
 
+        public Cliente CrearCliente(Cliente cliente) {
+            _context.Clientes.Add(cliente);
+			_context.SaveChanges();
+            return cliente;
+        }
+
     }
 }
