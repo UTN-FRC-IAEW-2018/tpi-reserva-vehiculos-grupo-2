@@ -18,19 +18,23 @@ namespace tp_api.Controllers {
         //Redifije al frontend
         private readonly string redirect_url_frontend = "http%3A%2F%2Flocalhost:3000%2Fcallback";
         //Redirije al backend
-        private readonly string redirect_url_backend = "http%3A%2F%2Flocalhost:14108%2Fapi%2Fauth%2Fuser";
+        private readonly string redirect_url_backend = "http%3A%2F%2Flocalhost:14089%2Fapi%2Fauth%2Fuser";
+
+        //Modificar este en el contructor.
+        private string redirect_url;
 
 
         public CUIniciarSesion(Context context)
         {
             _context = context;
+            redirect_url = redirect_url_backend;
 		}
 		[Route("login")]
 		public string IniciarSesion() {
 			// Retorna ruta de login de OAuth
 			string cliente = "grupo_nro2_client";
             string url = "http://ec2-54-87-197-49.compute-1.amazonaws.com/web/authorize?" +
-                        "client_id=" + cliente + "&redirect_uri=" + redirect_url_frontend +
+                        "client_id=" + cliente + "&redirect_uri=" + redirect_url +
                             "&response_type=code&state=somestate&scope=read_write";
             return url;
 		}
@@ -106,16 +110,7 @@ namespace tp_api.Controllers {
             return Json(usuario);
         }
         
-
-        private Cliente GetCliente(string mail)
-        {
-            ClientesController cont = new ClientesController(_context);
-			return cont.GetByEmail(mail);
-        }
-
-
-
-
+        
         // metodos privados
         private OAuthUser GetUsuarioOAuth(Token token)
         {
@@ -152,7 +147,7 @@ namespace tp_api.Controllers {
             request.AddHeader("Authorization", "Basic Z3J1cG9fbnJvMl9jbGllbnQ6dGVzdF9zZWNyZXQ=");
             request.AddHeader("Content-Type", "application/x-www-form-urlencoded");
 
-            request.AddParameter("application/x-www-form-urlencoded", $"grant_type=authorization_code&code={code}&redirect_uri={redirect_url_frontend}", ParameterType.RequestBody);
+            request.AddParameter("application/x-www-form-urlencoded", $"grant_type=authorization_code&code={code}&redirect_uri={redirect_url}", ParameterType.RequestBody);
 
             IRestResponse response = client.Execute(request);
             
@@ -164,9 +159,10 @@ namespace tp_api.Controllers {
             return t;
         }
 
+        /*
 		public Cliente CrearCliente() {
 			throw new System.Exception("Not implemented");
-		}
+		}*/
 
 		public void InicioExitoso(ref string mensaje) { 
 			

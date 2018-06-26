@@ -9,8 +9,8 @@ using Models;
 namespace tpapi.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20180625135203_UsuariosMigrations")]
-    partial class UsuariosMigrations
+    [Migration("20180626163952_InitialUsersReservasMigration")]
+    partial class InitialUsersReservasMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -18,20 +18,20 @@ namespace tpapi.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.1.1-rtm-30846");
 
-            modelBuilder.Entity("Models.Cliente", b =>
+            modelBuilder.Entity("Models.Reserva", b =>
                 {
-                    b.Property<int>("ClienteId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Apellido");
+                    b.Property<string>("Codigo");
 
-                    b.Property<string>("Nombre");
+                    b.Property<long>("DNI");
 
-                    b.Property<int>("NroDocumento");
+                    b.Property<int>("UserId");
 
-                    b.HasKey("ClienteId");
+                    b.HasKey("Id");
 
-                    b.ToTable("Clientes");
+                    b.ToTable("Reservas");
                 });
 
             modelBuilder.Entity("Models.Usuario", b =>
@@ -41,7 +41,13 @@ namespace tpapi.Migrations
 
                     b.Property<string>("AccessToken");
 
+                    b.Property<string>("Apellido");
+
+                    b.Property<long>("DNI");
+
                     b.Property<string>("Email");
+
+                    b.Property<string>("Nombre");
 
                     b.Property<string>("RefreshToken");
 

@@ -2,36 +2,34 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Models;
 
 namespace tpapi.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20180625153052_UsuariosUpdateMigrations")]
-    partial class UsuariosUpdateMigrations
+    partial class ContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.1.1-rtm-30846");
 
-            modelBuilder.Entity("Models.Cliente", b =>
+            modelBuilder.Entity("Models.Reserva", b =>
                 {
-                    b.Property<int>("ClienteId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Apellido");
+                    b.Property<string>("Codigo");
 
-                    b.Property<string>("Nombre");
+                    b.Property<long>("DNI");
 
-                    b.Property<int>("NroDocumento");
+                    b.Property<int>("UserId");
 
-                    b.HasKey("ClienteId");
+                    b.HasKey("Id");
 
-                    b.ToTable("Clientes");
+                    b.ToTable("Reservas");
                 });
 
             modelBuilder.Entity("Models.Usuario", b =>

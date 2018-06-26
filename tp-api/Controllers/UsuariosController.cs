@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using Clases;
@@ -49,6 +50,17 @@ namespace tp_api.Controllers
         public Usuario Get(string email)
         {
             return _context.Usuarios.Where(x => x.Email == email).FirstOrDefault();
+        }
+
+        public List<Usuario> GetReservas(long dni)
+        {
+            var us = _context.Usuarios.Where(x => x.DNI == dni).FirstOrDefault();
+            if (us == null)
+                return null;
+
+
+
+            return new List<Usuario>();
         }
     }
 
