@@ -40,7 +40,10 @@ namespace tp_api
             }
 
             app.UseCors(builder => 
-                builder.WithOrigins("http://localhost:3000"));
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader()
+            );
 
             app.UseMvc();
         }

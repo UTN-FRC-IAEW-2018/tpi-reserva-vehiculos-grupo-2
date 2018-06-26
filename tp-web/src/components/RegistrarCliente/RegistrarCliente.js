@@ -26,13 +26,17 @@ class RegistrarCliente extends Component {
 
   saveCliente() {
     if (this.validateCliente()) {
-      const cliente = {
-        documento: this.state.documento,
-        nombre: this.state.nombre,
-        apellido: this.state.apellido
-      }
-      api.put('', cliente)
-        .then((res) => {
+      const cliente = JSON.stringify({
+        email: localStorage.getItem("email"),
+        nrodoc: this.state.documento,
+        nom: this.state.nombre,
+        ape: this.state.apellido
+      });
+      api.post('/clientes/new', cliente, {
+        headers: {
+          'Content-Type': 'application/json',
+        }
+        }).then((res) => {
           this.props.history.push('');
         }).catch(function (error) {
           if (error.response){ console.log(error.response.status) }

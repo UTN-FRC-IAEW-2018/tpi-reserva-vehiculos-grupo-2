@@ -27,12 +27,11 @@ class App extends Component {
       .catch((error) => {
         this.setState({ error: "Hubo un problema al cargar su información." });
       })
-    //localStorage.setItem("token", "aja");
-    //this.setState({ isAuthenticated: true });
   }
 
   logout() {
     localStorage.removeItem("token");
+    localStorage.removeItem("email");
     this.setState({ isAuthenticated: false });
   }
 

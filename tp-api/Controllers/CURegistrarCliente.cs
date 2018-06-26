@@ -1,6 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
 using Models;
+using Clases;
 using tp_api.Controllers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -17,15 +18,16 @@ namespace tp_api.Controllers {
             _context = context;
         }
 
-		[HttpPost()]
-		public IActionResult RegistrarCliente(string email, int nrodoc, string nom, string ape) {
+		[Produces("application/json")]
+        [Route("new"), HttpPost()]
+        public IActionResult Post([FromBody] NuevoCliente input) {
 			ClientesController controller = new ClientesController(_context);
 			UsuariosController usuarioController = new UsuariosController(_context);
-			Usuario usuario = usuarioController.Get(email);
+			Usuario usuario = usuarioController.Get(input.email);
 			Cliente cliente = new Cliente {
-				NroDocumento = nrodoc,
-				Nombre = nom,
-				Apellido = ape,
+				NroDocumento = input.nrodoc,
+				Nombre = input.nom,
+				Apellido = input.ape,
 				UsuarioId = usuario.UsuarioId
 			};
 			controller.CrearCliente(cliente);
