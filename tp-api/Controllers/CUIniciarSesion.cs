@@ -14,8 +14,11 @@ namespace tp_api.Controllers {
 
 		private readonly Context _context;
 
-        private string redirect_url = "http%3A%2F%2Flocalhost:3000%2Fcallback";
-        private string local_redirect_url = "http%3A%2F%2Flocalhost:14108%2Fapi%2Fauth%2Fuser";
+        //Uso uno u otro cunado estoy trabajando con el back o con el front.
+        //Redifije al frontend
+        private readonly string redirect_url_frontend = "http%3A%2F%2Flocalhost:3000%2Fcallback";
+        //Redirije al backend
+        private readonly string redirect_url_backend = "http%3A%2F%2Flocalhost:14108%2Fapi%2Fauth%2Fuser";
 
 
         public CUIniciarSesion(Context context)
@@ -27,7 +30,7 @@ namespace tp_api.Controllers {
 			// Retorna ruta de login de OAuth
 			string cliente = "grupo_nro2_client";
             string url = "http://ec2-54-87-197-49.compute-1.amazonaws.com/web/authorize?" +
-                        "client_id=" + cliente + "&redirect_uri=" + redirect_url +
+                        "client_id=" + cliente + "&redirect_uri=" + redirect_url_frontend +
                             "&response_type=code&state=somestate&scope=read_write";
             return url;
 		}
@@ -149,7 +152,7 @@ namespace tp_api.Controllers {
             request.AddHeader("Authorization", "Basic Z3J1cG9fbnJvMl9jbGllbnQ6dGVzdF9zZWNyZXQ=");
             request.AddHeader("Content-Type", "application/x-www-form-urlencoded");
 
-            request.AddParameter("application/x-www-form-urlencoded", $"grant_type=authorization_code&code={code}&redirect_uri={redirect_url}", ParameterType.RequestBody);
+            request.AddParameter("application/x-www-form-urlencoded", $"grant_type=authorization_code&code={code}&redirect_uri={redirect_url_frontend}", ParameterType.RequestBody);
 
             IRestResponse response = client.Execute(request);
             

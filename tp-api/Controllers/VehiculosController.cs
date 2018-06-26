@@ -34,8 +34,15 @@ namespace tp_api.Controllers
 
             var result =  service.ConsultarVehiculosDisponiblesAsync(WService.Credential, req).Result;
 
-            return Json(result.ConsultarVehiculosDisponiblesResult.VehiculosEncontrados);
+            var vehiculos = result.ConsultarVehiculosDisponiblesResult.VehiculosEncontrados;
+
+            foreach(var v in vehiculos)
+                v.PrecioPorDia *= (decimal)1.20;
+
+            return Json(vehiculos);
         }
+
+        
         
     }
 }

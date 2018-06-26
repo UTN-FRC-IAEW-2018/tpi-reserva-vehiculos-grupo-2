@@ -31,6 +31,7 @@ namespace tp_api.Controllers
             return Json(result.ConsultarPaisesResult.Paises);
         }
 
+        
 
         [HttpGet("{pais:int}"), Route("ciudad")]
         public JsonResult GetCiudades(int pais)
@@ -40,9 +41,9 @@ namespace tp_api.Controllers
             var req = new ConsultarCiudadesRequest();
             req.IdPais = pais;
 
-            ConsultarCiudadesResponse1 result = service.ConsultarCiudadesAsync(WService.Credential, req).Result;
-
-            return Json(result.ConsultarCiudadesResult.Ciudades);
+            var result = service.ConsultarCiudadesAsync(WService.Credential, req).Result.ConsultarCiudadesResult;
+            
+            return Json(result.Ciudades);
         }
 
 
