@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using Clases;
 
-namespace tp_api.Controllers
+namespace tp_api.ModelsControllers
 {
     public class UsuariosController : ControllerBase
     {
@@ -18,7 +20,7 @@ namespace tp_api.Controllers
         public Usuario GetByOAuth(OAuthUser user)
         {
             var us = _context.Usuarios.Where(x => x.Email == user.Username).FirstOrDefault();
-            if(us == null)
+            if (us == null)
             {
                 Usuario nuevo = new Usuario();
                 nuevo.Email = user.Username;
@@ -51,9 +53,13 @@ namespace tp_api.Controllers
         {
             return _context.Usuarios.Where(x => x.Email == email).FirstOrDefault();
         }
-        public Usuario GetByUsername(string username)
+        public Usuario GetByDni(long dni)
         {
-            return _context.Usuarios.Where(x => x.Username == username).FirstOrDefault();
+            return _context.Usuarios.Where(x => x.DNI == dni).FirstOrDefault();
+        }
+        public Usuario GetByToken(string token)
+        {
+            return _context.Usuarios.Where(x => x.AccessToken == token).FirstOrDefault();
         }
 
         public List<Usuario> GetReservas(long dni)
@@ -67,6 +73,4 @@ namespace tp_api.Controllers
             return new List<Usuario>();
         }
     }
-
-
 }
