@@ -9,30 +9,14 @@ using Models;
 namespace tpapi.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20180626163952_InitialUsersReservasMigration")]
-    partial class InitialUsersReservasMigration
+    [Migration("20180627002153_InitialUsuariosMigration")]
+    partial class InitialUsuariosMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.1.1-rtm-30846");
-
-            modelBuilder.Entity("Models.Reserva", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Codigo");
-
-                    b.Property<long>("DNI");
-
-                    b.Property<int>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Reservas");
-                });
 
             modelBuilder.Entity("Models.Usuario", b =>
                 {

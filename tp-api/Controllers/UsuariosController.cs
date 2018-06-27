@@ -51,6 +51,10 @@ namespace tp_api.Controllers
         {
             return _context.Usuarios.Where(x => x.Email == email).FirstOrDefault();
         }
+        public Usuario GetByUsername(string username)
+        {
+            return _context.Usuarios.Where(x => x.Username == username).FirstOrDefault();
+        }
 
         public List<Usuario> GetReservas(long dni)
         {

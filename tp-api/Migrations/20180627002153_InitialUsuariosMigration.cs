@@ -3,25 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace tpapi.Migrations
 {
-    public partial class InitialUsersReservasMigration : Migration
+    public partial class InitialUsuariosMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Reservas",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Codigo = table.Column<string>(nullable: true),
-                    UserId = table.Column<int>(nullable: false),
-                    DNI = table.Column<long>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Reservas", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Usuarios",
                 columns: table => new
@@ -45,9 +30,6 @@ namespace tpapi.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Reservas");
-
             migrationBuilder.DropTable(
                 name: "Usuarios");
         }

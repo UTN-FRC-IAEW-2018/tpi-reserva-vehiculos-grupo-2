@@ -16,22 +16,6 @@ namespace tpapi.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.1.1-rtm-30846");
 
-            modelBuilder.Entity("Models.Reserva", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Codigo");
-
-                    b.Property<long>("DNI");
-
-                    b.Property<int>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Reservas");
-                });
-
             modelBuilder.Entity("Models.Usuario", b =>
                 {
                     b.Property<int>("UsuarioId")
