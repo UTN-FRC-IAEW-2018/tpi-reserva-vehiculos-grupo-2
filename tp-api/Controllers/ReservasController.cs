@@ -22,35 +22,17 @@ namespace tp_api.Controllers
 
         // GET api/clientes/37821733/reservas
         [Route("{dni}/reservas")]
-        public IActionResult Get(long dni)
+        public IActionResult ListarReservas(long dni)
         {
-            var us_controller = new UsuariosController(_context);
-            var us = us_controller.GetByDni(dni);
-
-            if (us == null)
-                return NotFound("No se encontro el usuario.");
-
-            var res_controller = new ModelsControllers.ReservasController(_context);
-            var reservas = res_controller.GetByUsuario(us);
-
-
+            var reservas = getReservas(dni);
             return Json(reservas);
         }
 
         // GET api/clientes/37821733/reservas/2
         [Route("{dni}/reservas/{id}")]
-        public IActionResult Get(long dni, int id)
+        public IActionResult MostrarReserva(long dni, int id)
         {
-            var us_controller = new UsuariosController(_context);
-            var us = us_controller.GetByDni(dni);
-
-            if (us == null)
-                return NotFound("No se encontro el usuario.");
-
-            var res_controller = new ModelsControllers.ReservasController(_context);
-            var reservas = res_controller.GetByUsuario(us);
-
-            var reserva = reservas.Where(x => x.Id == id).FirstOrDefault();
+            var reserva = getReserva(dni, id);
             if (reserva == null)
                 return NotFound("No se encontro esa reserva, con ese usuario.");
 
@@ -60,7 +42,7 @@ namespace tp_api.Controllers
 
             var result = service.ConsultarReservaAsync(WService.Credential, req).Result.ConsultarReservaResult;
             var soap_reserva = result.Reserva;
-
+            
             Object[] ar = new Object[] { reserva, soap_reserva };
 
 
@@ -120,9 +102,28 @@ namespace tp_api.Controllers
         
         // DELETE api/clientes/37821733/reservas/321
         [HttpDelete(), Route("{dni}/reservas/{reserva}")]
-        public IActionResult Post([FromBody]string value)
+        public IActionResult CancelarReserva([FromRoute] long dni, [FromRoute] int id)
         {
+
+
             return null;
+        }
+
+
+        private Reserva getReserva(long dni, int id)
+        {
+            return getReservas(dni).Where(x => x.Id == id).FirstOrDefault();
+        }
+        private List<Reserva> getReservas(long dni)
+        {
+            var us_controller = new UsuariosController(_context);
+            var us = us_controller.GetByDni(dni);
+
+            if (us == null)
+                return new List<Reserva>();
+
+            var res_controller = new ModelsControllers.ReservasController(_context);
+            return res_controller.GetByUsuario(us);
         }
 
 
