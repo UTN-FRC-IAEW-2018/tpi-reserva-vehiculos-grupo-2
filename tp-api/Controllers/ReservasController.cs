@@ -29,7 +29,7 @@ namespace tp_api.Controllers
         }
 
         // GET api/clientes/37821733/reservas/2
-        [Route("{dni}/reservas/{id}")]
+        [HttpGet(), Route("{dni}/reservas/{id}")]
         public IActionResult MostrarReserva(long dni, int id)
         {
             var reserva = getReserva(dni, id);
@@ -44,8 +44,6 @@ namespace tp_api.Controllers
             var soap_reserva = result.Reserva;
             
             Object[] ar = new Object[] { reserva, soap_reserva };
-
-
             return Json(ar);
         }
 
@@ -101,12 +99,27 @@ namespace tp_api.Controllers
 
         
         // DELETE api/clientes/37821733/reservas/321
-        [HttpDelete(), Route("{dni}/reservas/{reserva}")]
+        [HttpDelete("{dni}/reservas/{id}")]
         public IActionResult CancelarReserva([FromRoute] long dni, [FromRoute] int id)
         {
+            var reserva = getReserva(dni, id);
+            if (reserva == null)
+                return NotFound("No se encontro");
 
 
-            return null;
+            var service = WService.Service;
+            var req = new CancelarReservaRequest();
+            req.CodigoReserva = reserva.Codigo;
+
+            var task = service.CancelarReservaAsync(WService.Credential, req);
+            var response = task.Result;
+            
+            //Guardamos el estado actual.
+            reserva.FechaCancelacion = response.CancelarReservaResult.Reserva.FechaCancelacion;
+            _context.SaveChanges();
+
+            Object[] ar = new Object[] { reserva, response.CancelarReservaResult.Reserva };
+            return Json(ar);
         }
 
 
