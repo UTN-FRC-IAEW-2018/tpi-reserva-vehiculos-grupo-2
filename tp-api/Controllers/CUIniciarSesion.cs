@@ -104,7 +104,7 @@ namespace tp_api.Controllers {
             usuario.Nombre = input.Nombre;
             usuario.Apellido = input.Apellido;
             usuario.DNI = input.DNI;
-            usuario.Username = input.Username;
+            usuario.Username = input.Email;
             _context.SaveChanges();
 
             return Json(usuario);

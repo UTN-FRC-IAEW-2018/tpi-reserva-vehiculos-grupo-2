@@ -28,12 +28,13 @@ class RegistrarCliente extends Component {
   saveCliente() {
     if (this.validateCliente()) {
       const cliente = JSON.stringify({
-        email: localStorage.getItem("email"),
-        nrodoc: this.state.documento,
-        nom: this.state.nombre,
-        ape: this.state.apellido
+        Email: localStorage.getItem("email"),
+        AccessToken: localStorage.getItem("token"),
+        DNI: this.state.documento,
+        Nombre: this.state.nombre,
+        Apellido: this.state.apellido
       });
-      api.post('/clientes/new', cliente, {
+      api.post('/auth/user', cliente, {
         headers: {
           'Content-Type': 'application/json',
         }
