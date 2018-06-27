@@ -1,5 +1,10 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { Provider, connect } from "react-redux";
+import { createStore, applyMiddleware } from "redux";
+import {auth} from "./actions";
+import {helpo} from "./reducers";
+import thunk from "redux-thunk";
 import ListaVehiculos from './components/ListaVehiculos/ListaVehiculos';
 import ListaReservas from './components/ListaReservas/ListaReservas';
 import VerReserva from './components/VerReserva/VerReserva';
@@ -8,16 +13,19 @@ import CallbackOAuth from './components/CallbackOAuth/CallbackOAuth';
 import api from './api';
 import './App.css';
 
-class App extends Component {
+let store = createStore(helpo, applyMiddleware(thunk));
+
+class RootContainerComponent extends Component {
 
   constructor(props){
     super(props);
-    this.state = {
-      isAuthenticated: localStorage.getItem("token")
-    }
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
   }
+
+  componentDidMount() {
+    this.props.loadUser();
+  } 
 
   login() {
     api.get('/auth/login')
@@ -30,9 +38,7 @@ class App extends Component {
   }
 
   logout() {
-    localStorage.removeItem("token");
-    localStorage.removeItem("email");
-    this.setState({ isAuthenticated: false });
+    this.props.logout();
   }
 
   render() {
@@ -40,13 +46,13 @@ class App extends Component {
       <Router>
         <div>
           <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-            <a class="navbar-brand" href="#">TP IAEW 2018</a>
+            <a class="navbar-brand" href=".">TP IAEW 2018</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarsExampleDefault">
             {
-              this.state.isAuthenticated &&
+              this.props.auth.isAuthenticated &&
                   <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
                       <Link className="nav-link" to="/">Inicio</Link>
@@ -61,7 +67,7 @@ class App extends Component {
             }
             </div>
             {
-              !this.state.isAuthenticated ? (
+              !this.props.auth.isAuthenticated ? (
                 <button className="btn btn-success" onClick={this.login}>Iniciar sesión</button>
               ) : (
                 <button className="btn btn-warning" onClick={this.logout}>Cerrar sesión</button>
@@ -88,4 +94,32 @@ const Home = () => (
     </div>
 );
 
-export default App;
+const mapStateToProps = state => {
+  return {
+    auth: state.auth,
+  }
+}
+
+
+const mapDispatchToProps = dispatch => {
+  return {
+    loadUser: () => {
+      return dispatch(auth.loadUser());
+    },
+    logout: () => {
+      return dispatch(auth.logout());
+    }
+  }
+}
+
+let RootContainer = connect(mapStateToProps, mapDispatchToProps)(RootContainerComponent);
+
+export default class App extends Component {
+  render() {
+    return (
+      <Provider store={store}>
+        <RootContainer />
+      </Provider>
+    )
+  }
+}

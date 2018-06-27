@@ -27,7 +27,7 @@ namespace tp_api.Controllers {
         public CUIniciarSesion(Context context)
         {
             _context = context;
-            redirect_url = redirect_url_backend;
+            redirect_url = redirect_url_frontend;
 		}
 		[Route("login")]
 		public string IniciarSesion() {

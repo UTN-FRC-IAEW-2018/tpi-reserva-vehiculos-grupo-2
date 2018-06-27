@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
-import api from '../../api';
+import { Redirect } from 'react-router-dom';
+import { connect } from "react-redux";
 import queryString from 'query-string';
+import {auth} from "../../actions";
+
 
 
 class CallbackOAuth extends Component {
@@ -11,31 +14,29 @@ class CallbackOAuth extends Component {
   }
 
   getToken(code) {
-    api.get('/auth/user?code=' + code)
-      .then(res => {
-        console.log(res);
-        localStorage.setItem("token", res.data.token);
-        localStorage.setItem("email", res.data.email);
-        if (res.data.nuevo) {
-          this.props.history.push('/registrar-cliente')
-        } else {
-          this.props.history.push('');
-        }
-      })
-      .catch((error) => {
-        //console.log(error);
-        localStorage.setItem("token", "hola");
-        this.props.history.push('');
-      })
+    this.props.login(code);
   }
 
   render() {
-    return (
-      <div>
-        <label>Cargando...</label>
-      </div>
-    );
+    if (this.props.isAuthenticated) {
+      return <Redirect to="/registrar-cliente" />
+    } else {
+      return (
+        <div>
+          <label>Cargando...</label>
+        </div>
+      );
+    }
   }
 }
 
-export default CallbackOAuth;
+const mapStateToProps = state => {return { isAuthenticated: state.auth.isAuthenticated }}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    login: (code) => {
+      return dispatch(auth.login(code));
+    }
+  };
+}
+export default connect(mapStateToProps, mapDispatchToProps)(CallbackOAuth);

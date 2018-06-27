@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 import api from '../../api';
 
 
@@ -37,6 +38,7 @@ class RegistrarCliente extends Component {
           'Content-Type': 'application/json',
         }
         }).then((res) => {
+          localStorage.removeItem("nuevo");
           this.props.history.push('');
         }).catch(function (error) {
           if (error.response){ console.log(error.response.status) }
@@ -59,22 +61,26 @@ class RegistrarCliente extends Component {
  
 
   render() {
-    return (
-      <div>
-        <h1>Complete sus datos de cliente</h1>
-        <div className="form-group">
-          <label for="dni">Documento</label>
-          <input type="text" name="documento" className="form-control" value={this.state.documento} onChange={this.handleInputChange} />
-          <label for="nombre">Nombre</label>
-          <input type="text" name="nombre" className="form-control" value={this.state.nombre} onChange={this.handleInputChange} />
-          <label for="apellido">Apellido</label>
-          <input type="text" name="apellido" className="form-control" value={this.state.apellido} onChange={this.handleInputChange} />
-          <span style={{color: "red"}}>{this.state.error}</span>
-          <hr />
-          <button className="btn btn-primary" onClick={this.saveCliente}>Guardar datos</button>
+    if (!localStorage.getItem("nuevo")) {
+      return <Redirect to="/" />
+    } else {
+      return (
+        <div>
+          <h1>Complete sus datos de cliente</h1>
+          <div className="form-group">
+            <label for="dni">Documento</label>
+            <input type="text" name="documento" className="form-control" value={this.state.documento} onChange={this.handleInputChange} />
+            <label for="nombre">Nombre</label>
+            <input type="text" name="nombre" className="form-control" value={this.state.nombre} onChange={this.handleInputChange} />
+            <label for="apellido">Apellido</label>
+            <input type="text" name="apellido" className="form-control" value={this.state.apellido} onChange={this.handleInputChange} />
+            <span style={{color: "red"}}>{this.state.error}</span>
+            <hr />
+            <button className="btn btn-primary" onClick={this.saveCliente}>Guardar datos</button>
+          </div>
         </div>
-      </div>
-    );
+      );
+    }
   }
 }
 
