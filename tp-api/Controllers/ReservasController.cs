@@ -1,4 +1,6 @@
-﻿using SOAP_Serv;
+﻿using Newtonsoft.Json.Linq;
+using tp_api.ModelsControllers;
+using SOAP_Serv;
 using Clases;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,25 +20,43 @@ namespace tp_api.Controllers
             _context = context;
         }
 
-
         // GET api/clientes/37821733/reservas
         [Route("{dni}/reservas")]
-        public IActionResult Get(int dni)
+        public IActionResult ListarReservas(long dni)
         {
-            var service = WService.Service;
+            var reservas = getReservas(dni);
+            return Json(reservas);
+        }
 
-            return null;
+        // GET api/clientes/37821733/reservas/2
+        [HttpGet(), Route("{dni}/reservas/{id}")]
+        public IActionResult MostrarReserva(long dni, int id)
+        {
+            var reserva = getReserva(dni, id);
+            if (reserva == null)
+                return NotFound("No se encontro esa reserva, con ese usuario.");
+
+            var service = WService.Service;
+            var req = new ConsultarReservasRequest();
+            req.CodigoReserva = reserva.Codigo;
+
+            var result = service.ConsultarReservaAsync(WService.Credential, req).Result.ConsultarReservaResult;
+            var soap_reserva = result.Reserva;
+            
+            Object[] ar = new Object[] { reserva, soap_reserva };
+            return Json(ar);
         }
 
         // POST api/clientes/37821733/reservas
         [HttpPost(), Route("{dni}/reservas")]
-        public IActionResult CrearReserva([FromBody] CrearReservaPOSTRequest input)
+        public IActionResult CrearReserva([FromBody] CrearReservaPOSTRequest input, [FromRoute] int dni)
         {
             var service = WService.Service;
             var req = new ReservarVehiculoRequest();
 
-            var controller = new UsuariosController(_context);
-            var us = controller.GetByUsername(input.username);
+            //Traemos el Usuario segun el Token.
+            var user_controller = new UsuariosController(_context);
+            var us = user_controller.GetByToken(input.token);
             if (us == null)
                 return NotFound("Usuario no encontrado");
 
@@ -54,35 +74,22 @@ namespace tp_api.Controllers
 
             req.IdVehiculoCiudad = input.idVehCiud;
 
+            //Ejecutamos la llamada al servidor SOAP.
             var result = service.ReservarVehiculoAsync(WService.Credential, req).Result.ReservarVehiculoResult;
 
             //Reserva devuelta
             var soap_reserva = result.Reserva;
 
-            var db_reserva = new Reserva();
+            //Guardamos en la DB.
+            var reserva_controller = new ModelsControllers.ReservasController(_context);
+            var db_reserva = reserva_controller.Crear(soap_reserva, us);
 
-            db_reserva.Codigo = soap_reserva.CodigoReserva;
-            db_reserva.DNI = us.DNI;
-            db_reserva.ExtId = soap_reserva.Id;
-            db_reserva.FechaDevolucion = soap_reserva.FechaHoraDevolucion;
-            db_reserva.FechaRetiro = soap_reserva.FechaHoraRetiro;
-            db_reserva.LugarDevolucion = soap_reserva.LugarDevolucion;
-            db_reserva.LugarRetiro = soap_reserva.LugarRetiro;
-            db_reserva.TotalReserva = soap_reserva.TotalReserva;
-            db_reserva.TotalReserva = soap_reserva.TotalReserva * (decimal)1.2;
-            db_reserva.UserId = us.UsuarioId;
-            db_reserva.VehiculoXCiudadId = soap_reserva.VehiculoPorCiudadId;
-
-            _context.Reservas.Add(db_reserva);
-            _context.SaveChanges();
-
-
-            //return Json(result.ReservarVehiculoResult.Reserva.Id);
+            //Devolvemos la reserva almacenada local.
             return Json(db_reserva);
         } 
         public class CrearReservaPOSTRequest
         {
-            public string username { get; set; }
+            public string token { get; set; }
             public DateTime desde { get; set; }
             public DateTime hasta { get; set; }
             public string lugarOrigen { get; set; }
@@ -92,10 +99,44 @@ namespace tp_api.Controllers
 
         
         // DELETE api/clientes/37821733/reservas/321
-        [HttpDelete(), Route("{dni}/reservas/{reserva}")]
-        public IActionResult Post([FromBody]string value)
+        [HttpDelete("{dni}/reservas/{id}")]
+        public IActionResult CancelarReserva([FromRoute] long dni, [FromRoute] int id)
         {
-            return null;
+            var reserva = getReserva(dni, id);
+            if (reserva == null)
+                return NotFound("No se encontro");
+
+
+            var service = WService.Service;
+            var req = new CancelarReservaRequest();
+            req.CodigoReserva = reserva.Codigo;
+
+            var task = service.CancelarReservaAsync(WService.Credential, req);
+            var response = task.Result;
+            
+            //Guardamos el estado actual.
+            reserva.FechaCancelacion = response.CancelarReservaResult.Reserva.FechaCancelacion;
+            _context.SaveChanges();
+
+            Object[] ar = new Object[] { reserva, response.CancelarReservaResult.Reserva };
+            return Json(ar);
+        }
+
+
+        private Reserva getReserva(long dni, int id)
+        {
+            return getReservas(dni).Where(x => x.Id == id).FirstOrDefault();
+        }
+        private List<Reserva> getReservas(long dni)
+        {
+            var us_controller = new UsuariosController(_context);
+            var us = us_controller.GetByDni(dni);
+
+            if (us == null)
+                return new List<Reserva>();
+
+            var res_controller = new ModelsControllers.ReservasController(_context);
+            return res_controller.GetByUsuario(us);
         }
 
 

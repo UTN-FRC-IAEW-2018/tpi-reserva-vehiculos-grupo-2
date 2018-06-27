@@ -4,7 +4,7 @@ using System;
 using Microsoft.AspNetCore.Mvc;
 using RestSharp;
 using tp_api.InterfacesREST;
-using tp_api.Controllers;
+using tp_api.ModelsControllers;
 using Models;
 using Clases;
 

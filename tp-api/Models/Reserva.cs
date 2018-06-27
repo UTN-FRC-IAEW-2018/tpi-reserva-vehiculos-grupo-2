@@ -10,8 +10,8 @@ namespace Models
         public int Id { get; set; }
         public int ExtId { get; set; }
         public string Codigo { get; set; }
-        private string Estado { get; set; }
-        private DateTime FechaCancelacion { get; set; }
+        //public string Estado { get; set; }
+        public DateTime? FechaCancelacion { get; set; }
         public DateTime FechaDevolucion { get; set; }
         public DateTime FechaRetiro { get; set; }
         public string LugarRetiro { get; set; }
