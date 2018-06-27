@@ -14,13 +14,7 @@ namespace tp_api.Controllers
     {
         public IActionResult Get(int dni)
         {
-            List<Lugar> values = new List<Lugar>()
-            {
-                new Lugar(){ Id = "H", Nombre = "Hotel" },
-                new Lugar(){ Id = "A", Nombre = "Aeropuerto"},
-                new Lugar(){ Id = "T", Nombre = "TerminalBus"}
-            };
-            return Json(values);
+            return Json(Lugar.getList());
         }
 
         

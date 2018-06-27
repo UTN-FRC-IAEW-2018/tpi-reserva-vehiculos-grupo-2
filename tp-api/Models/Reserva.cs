@@ -17,7 +17,7 @@ namespace Models
         public string LugarRetiro { get; set; }
         public string LugarDevolucion { get; set; }
         public decimal TotalReserva { get; set; }
-
+        public decimal TotalReservaPropia { get; set; }
         public int VehiculoXCiudadId { get; set; }
 
         public int UserId { get; set; }

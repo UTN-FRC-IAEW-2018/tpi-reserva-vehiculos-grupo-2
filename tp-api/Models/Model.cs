@@ -7,7 +7,7 @@ namespace Models
     {        
         //public DbSet<Cliente> Clientes { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
-        //public DbSet<Reserva> Reservas { get; set; }
+        public DbSet<Reserva> Reservas { get; set; }
 
 
         // https://docs.microsoft.com/en-us/ef/core/get-started/netcore/new-db-sqlite

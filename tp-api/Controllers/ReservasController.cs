@@ -65,14 +65,20 @@ namespace tp_api.Controllers
             db_reserva.DNI = us.DNI;
             db_reserva.ExtId = soap_reserva.Id;
             db_reserva.FechaDevolucion = soap_reserva.FechaHoraDevolucion;
-            db_reserva.FechaRetiro = soap_reserva.
+            db_reserva.FechaRetiro = soap_reserva.FechaHoraRetiro;
+            db_reserva.LugarDevolucion = soap_reserva.LugarDevolucion;
+            db_reserva.LugarRetiro = soap_reserva.LugarRetiro;
+            db_reserva.TotalReserva = soap_reserva.TotalReserva;
+            db_reserva.TotalReserva = soap_reserva.TotalReserva * (decimal)1.2;
+            db_reserva.UserId = us.UsuarioId;
+            db_reserva.VehiculoXCiudadId = soap_reserva.VehiculoPorCiudadId;
 
-            
-
+            _context.Reservas.Add(db_reserva);
+            _context.SaveChanges();
 
 
             //return Json(result.ReservarVehiculoResult.Reserva.Id);
-            return null;
+            return Json(db_reserva);
         } 
         public class CrearReservaPOSTRequest
         {

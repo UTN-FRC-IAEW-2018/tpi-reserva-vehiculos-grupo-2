@@ -8,6 +8,25 @@ namespace Clases
 {
     public class Lugar
     {
+        private static List<Lugar> values;
+        public static List<Lugar> getList()
+        {
+            if (values == null)
+                setLugares();
+            return values;
+        }
+        private static void setLugares()
+        {
+            values = new List<Lugar>()
+                {
+                    new Lugar(){ Id = "H", Nombre = "Hotel" },
+                    new Lugar(){ Id = "A", Nombre = "Aeropuerto"},
+                    new Lugar(){ Id = "T", Nombre = "TerminalBus"}
+                };
+        }
+
+
+
         public String Id { get; set; }
         public String Nombre { get; set; }
 
@@ -23,6 +42,20 @@ namespace Clases
                     return LugarRetiroDevolucion.TerminalBuses;
             }
             return LugarRetiroDevolucion.TerminalBuses;
+        }
+
+        public static string GetId(LugarRetiroDevolucion l)
+        {
+            switch (l)
+            {
+                case LugarRetiroDevolucion.Aeropuerto:
+                    return "A";
+                case LugarRetiroDevolucion.Hotel:
+                    return "H";
+                case LugarRetiroDevolucion.TerminalBuses:
+                    return "T";
+            }
+            return "N";
         }
     }
 }
