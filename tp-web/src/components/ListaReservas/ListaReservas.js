@@ -41,7 +41,7 @@ class ListaReservas extends Component {
   }
 
   deleteReserva(id) {
-    api.delete('/api/reservas/' + id)
+    api.delete('/api/clientes/' + localStorage.getItem("dni") + '/' + id)
       .then(res => {
         this.loadReservas();
       })
