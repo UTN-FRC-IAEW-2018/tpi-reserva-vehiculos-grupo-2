@@ -1,4 +1,3 @@
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +7,8 @@ using Models;
 using Clases;
 
 namespace tp_api.Controllers {
+
+    [Produces("application/json")]
     [Route("api/auth")]
     public class AuthController : Controller  {
 
@@ -40,7 +41,7 @@ namespace tp_api.Controllers {
             return url;
 		}
 
-
+        // Te redirije con la configuracion actual al servidor OAuth. Para pruebas de apis.
         [HttpGet, Route("oauth")]
         public ActionResult OAuth()
         {
@@ -94,7 +95,6 @@ namespace tp_api.Controllers {
         }
 
 
-        [Produces("application/json")]
         [HttpPost, Route("user")]
         public IActionResult PostUser([FromBody] Usuario input)
         {

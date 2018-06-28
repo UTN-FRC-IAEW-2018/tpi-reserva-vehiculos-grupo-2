@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
-using tp_api.ModelsControllers;
+﻿using tp_api.ModelsControllers;
 using SOAP_Serv;
 using Clases;
 using System.Collections.Generic;
@@ -90,12 +89,13 @@ namespace tp_api.Controllers
             return Json(db_reserva);
         }
 
-
+        // Asi es como tiene que estar armado el JSON para crear una reserva.
         public class CrearReservaPOSTRequest
         {
             public string token { get; set; }
             public DateTime desde { get; set; }
             public DateTime hasta { get; set; }
+            //Los lugares pueden ser: [M, H, A]
             public string lugarOrigen { get; set; }
             public string lugarDestino { get; set; }
             public int idVehCiud { get; set; }
@@ -126,7 +126,7 @@ namespace tp_api.Controllers
             return Json(ar);
         }
 
-
+        //Metodos Privados.
         private Reserva getReserva(long dni, int id)
         {
             return getReservas(dni).Where(x => x.Id == id).FirstOrDefault();

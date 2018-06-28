@@ -1,9 +1,5 @@
 ﻿using SOAP_Serv;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Clases;
 
@@ -21,12 +17,10 @@ namespace tp_api.Controllers
         /// <param name="desde">desde: 'YYYY-MM-DDTHH:mm:ss' (2016-12-31T23:59:59)</param>
         /// <param name="hasta">hasta: 'YYYY-MM-DDTHH:mm:ss' (2016-12-31T23:59:59)</param>
         /// <returns></returns>
-
-        [HttpGet]
-        [Produces("application/json")]
+        [HttpGet, Produces("application/json")]
         public IActionResult ConsultarVehiculosDisponibles([FromQuery] int ciudad, [FromQuery] DateTime desde, [FromQuery] DateTime hasta)
         {
-            ///api/vehiculos?ciudad=2&desde=2018-06-01T00:00:00&hasta=2018-06-31T23:59:59
+            /// GET api/vehiculos?ciudad=2&desde=2018-06-01T00:00:00&hasta=2018-06-31T23:59:59
             var service = WService.Service;
 
             var req = new ConsultarVehiculosRequest();

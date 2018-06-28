@@ -1,28 +1,15 @@
-﻿
-using System.Net;
-using System.Net.Security;
-using System.Web;
-using System.Net.Http;
-using SOAP_Serv;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using SOAP_Serv;
 using Microsoft.AspNetCore.Mvc;
-using System.Text;
-using System.IO;
-using RestSharp;
 using Clases;
 
 namespace tp_api.Controllers
 {
+    [Produces("application/json")]
     [Route("api/paises")]
     public class PaisesController : Controller
     {
-        // GET: api/paises
+        // GET api/paises
         [HttpGet]
-        [Produces("application/json")]
         public JsonResult ConsultarPaises()
         {
             var service = WService.Service;
@@ -31,9 +18,8 @@ namespace tp_api.Controllers
             return Json(result.ConsultarPaisesResult.Paises);
         }
 
-        // GET: api/paises/{pais}
+        // GET api/paises/1/ciudades
         [HttpGet, Route("{pais}/ciudades")]
-        [Produces("application/json")]
         public JsonResult ConsultarCiudades([FromRoute] int pais)
         {
             var service = WService.Service;
