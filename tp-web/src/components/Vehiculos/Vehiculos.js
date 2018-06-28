@@ -55,7 +55,7 @@ class Vehiculos extends Component {
   }
 
   loadPaises() {
-    api.get('/geo/pais/')
+    api.get('/paises/')
       .then(res => {
         const paisesData = res.data;
         this.loadCiudadesInicial(paisesData)
@@ -78,7 +78,7 @@ class Vehiculos extends Component {
 
 
   loadCiudadesInicial(paisesData) {
-    api.get('/geo/ciudad?pais=' + paisesData[0].id)
+    api.get('/paises/' + paisesData[0].id + '/ciudades')
       .then(res => {
         const ciudadesData = res.data;
         this.setState({ 
@@ -140,7 +140,7 @@ class Vehiculos extends Component {
   }
 
   handleChange = (selectedOption) => {
-    this.desPorPais(selectedOption);
+    this.loadCiudadesPorPais(selectedOption);
   }
 
   render() {

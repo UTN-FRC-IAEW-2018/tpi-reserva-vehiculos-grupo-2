@@ -32,7 +32,7 @@ namespace tp_api.Controllers
         }
 
         // GET: api/paises/{pais}
-        [HttpGet("{pais:int}")]
+        [HttpGet, Route("{pais}/ciudades")]
         [Produces("application/json")]
         public JsonResult ConsultarCiudades([FromRoute] int pais)
         {

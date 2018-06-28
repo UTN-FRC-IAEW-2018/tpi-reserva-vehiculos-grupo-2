@@ -49,7 +49,7 @@ namespace tp_api.Controllers {
 
         
 		[HttpGet("{code}"), Route("user")]
-        public IActionResult GetUser([FromRoute] string code)
+        public IActionResult GetUser(string code)
         {
             if (Request.Method != "GET")
                 return Json("No era aca");
