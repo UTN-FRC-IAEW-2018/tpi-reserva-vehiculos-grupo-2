@@ -1,23 +1,26 @@
 import React, { Component } from 'react';
+import moment from 'moment';
 import api from '../../api';
+import VerReserva from '../VerReserva/VerReserva';
 import './ListaReservas.css';
 
 
 class ListaReservas extends Component {
   constructor(props) {
     super(props);
-    if (!localStorage.getItem("token")) { this.props.history.push('')}
+    if (!localStorage.getItem("token")) { this.props.history.push('') }
     this.state = {
-      reservas: [{id: 1, nombre: 'Algo', descripcion: 'Algo más', precio: '$230'}],
+      reservas: [],
       error: undefined
     }
+    this.handleReturn = this.handleReturn.bind(this);
   }
 
   loadReservas() {
-    api.get('/api/reservas/')
+    api.get('/clientes/' + localStorage.getItem("dni") + '/reservas')
       .then(res => {
         const reservasData = res.data;
-        this.setState({ reservas: reservasData, error: undefined});
+        this.setState({ reservas: reservasData, error: undefined });
       })
       .catch((error) => {
         this.setState({ error: "Hubo un problema al cargar su información." });
@@ -28,12 +31,16 @@ class ListaReservas extends Component {
     this.loadReservas();
   }
 
-  viewReserva(id) {
-    this.props.history.push('reserva', { reserva_id: id });
+  viewReserva(reserva) {
+    this.setState({ reserva: reserva });
+  }
+
+  handleReturn() {
+    this.setState({ reserva: undefined });
   }
 
   deleteReserva(id) {
-    api.delete('/api/reservas/' + id)
+    api.delete('/clientes/' + localStorage.getItem("dni") + '/reservas/' + id)
       .then(res => {
         this.loadReservas();
       })
@@ -43,42 +50,52 @@ class ListaReservas extends Component {
   }
 
   render() {
-    const listaReservas = this.state.reservas.map((r) =>
-      <tr>
-        <td>{r.id}</td>
-        <td>{r.nombre}</td>
-        <td>{r.descripcion}</td>
-        <td>{r.precio}</td>
-        <button type="button" class="btn btn-success" onClick={() => this.viewReserva(r.id)}>
-          Consultar
-        </button>
-        <button type="button" class="btn btn-danger" onClick={() => this.deleteReserva(r.id)}>
-          Eliminar
-        </button>
-      </tr>
-    );
-    return (
-      <div>
-        <h1>Lista de reservas</h1>
-        <span style={{color: "red"}}>{this.state.error}</span>
-        <hr />
-        <table class="table">
-            <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Nombre</th>
-                <th scope="col">Descripción</th>
-                <th scope="col">Precio</th>
-                <th scope="col"></th>
-                <th scope="col"></th>
-            </tr>
-            </thead>
-            <tbody>
-            {listaReservas}
-            </tbody>
-        </table>
-      </div>
-    );
+    if (this.state.reserva) {
+      return(
+        <VerReserva reserva={this.state.reserva} return={this.handleReturn} />
+      )
+    } else {
+      const listaReservas = this.state.reservas.map((r) =>
+        <tr>
+          <td>{r.codigo}</td>
+          <td>{moment(r.fechaRetiro).format('DD/MM/YYYY HH:mm')}</td>
+          <td>{r.lugarRetiro}</td>
+          <td>{r.fechaCancelacion ? "Cancelada" : "Activa"}</td>
+          <td>{'$' + parseFloat(r.totalReservaPropia).toFixed(2)}</td>
+          <button type="button" class="btn btn-success" onClick={() => this.viewReserva(r)}>
+            Consultar
+          </button>
+          <button type="button" class="btn btn-danger" onClick={() => this.deleteReserva(r.id)}
+            hidden={r.fechaCancelacion}
+          >
+            Cancelar
+          </button>
+        </tr>
+      );
+      return (
+        <div>
+          <h1>Mis reservas</h1>
+          <span style={{color: "red"}}>{this.state.error}</span>
+          <hr />
+          <table class="table">
+              <thead>
+              <tr>
+                  <th scope="col">Código</th>
+                  <th scope="col">Fecha de retiro</th>
+                  <th scope="col">Lugar de retiro</th>
+                  <th scope="col">Estado</th>
+                  <th scope="col">Total</th>
+                  <th scope="col"></th>
+                  <th scope="col"></th>
+              </tr>
+              </thead>
+              <tbody>
+              {listaReservas}
+              </tbody>
+          </table>
+        </div>
+      );
+    }
   }
 }
 

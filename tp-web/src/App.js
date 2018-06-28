@@ -5,7 +5,7 @@ import { createStore, applyMiddleware } from "redux";
 import {auth} from "./actions";
 import {helpo} from "./reducers";
 import thunk from "redux-thunk";
-import ListaVehiculos from './components/ListaVehiculos/ListaVehiculos';
+import Vehiculos from './components/Vehiculos/Vehiculos';
 import ListaReservas from './components/ListaReservas/ListaReservas';
 import VerReserva from './components/VerReserva/VerReserva';
 import RegistrarCliente from './components/RegistrarCliente/RegistrarCliente';
@@ -74,14 +74,23 @@ class RootContainerComponent extends Component {
               )
             }
           </nav>
-          <main role="main" class="container">
-            <Route exact path="/" component={Home} />
-            <Route path="/vehiculos" component={ListaVehiculos}/>
-            <Route path="/reservas" component={ListaReservas}/>
-            <Route path="/reserva" component={VerReserva}/>
-            <Route path="/callback" component={CallbackOAuth}/>
-            <Route path="/registrar-cliente" component={RegistrarCliente}/>
-          </main>
+          {
+            this.props.auth.isAuthenticated ? (
+              <main role="main" class="container">
+                <Route exact path="/" component={Home} />
+                <Route path="/vehiculos" component={Vehiculos}/>
+                <Route path="/reservas" component={ListaReservas}/>
+                <Route path="/reserva" component={VerReserva}/>
+                <Route path="/callback" component={CallbackOAuth}/>
+                <Route path="/registrar-cliente" component={RegistrarCliente}/>
+              </main>
+            ) : (
+              <main role="main" class="container">
+                <Route exact path="/" component={Home} />
+                <Route path="/callback" component={CallbackOAuth}/>
+              </main>
+            )
+          }
         </div>
       </Router>
     );
