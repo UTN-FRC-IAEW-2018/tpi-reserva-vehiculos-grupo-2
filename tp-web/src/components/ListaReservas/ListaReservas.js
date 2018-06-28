@@ -10,7 +10,7 @@ class ListaReservas extends Component {
     super(props);
     if (!localStorage.getItem("token")) { this.props.history.push('') }
     this.state = {
-      reservas: [{ id: 1, nombre: 'Algo', descripcion: 'Algo más', precio: '$230' }],
+      reservas: [],
       error: undefined
     }
     this.handleReturn = this.handleReturn.bind(this);
@@ -20,7 +20,6 @@ class ListaReservas extends Component {
     api.get('/clientes/' + localStorage.getItem("dni") + '/reservas')
       .then(res => {
         const reservasData = res.data;
-        console.log(res.data);
         this.setState({ reservas: reservasData, error: undefined });
       })
       .catch((error) => {
@@ -41,7 +40,7 @@ class ListaReservas extends Component {
   }
 
   deleteReserva(id) {
-    api.delete('/api/clientes/' + localStorage.getItem("dni") + '/' + id)
+    api.delete('/clientes/' + localStorage.getItem("dni") + '/reservas/' + id)
       .then(res => {
         this.loadReservas();
       })
