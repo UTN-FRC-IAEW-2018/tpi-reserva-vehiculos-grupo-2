@@ -17,11 +17,11 @@ using Clases;
 
 namespace tp_api.Controllers
 {
-    [Route("api/geo")]
-    public class GeoController : Controller
+    [Route("api/paises")]
+    public class PaisesController : Controller
     {
-        // GET: api/Paises
-        [HttpGet, Route("pais")]
+        // GET: api/paises
+        [HttpGet]
         [Produces("application/json")]
         public JsonResult ConsultarPaises()
         {
@@ -31,8 +31,8 @@ namespace tp_api.Controllers
             return Json(result.ConsultarPaisesResult.Paises);
         }
 
-        
-        [HttpGet("{pais:int}"), Route("ciudad")]
+        // GET: api/paises/{pais}
+        [HttpGet("{pais:int}")]
         [Produces("application/json")]
         public JsonResult ConsultarCiudades([FromRoute] int pais)
         {

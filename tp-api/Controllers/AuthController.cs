@@ -3,7 +3,6 @@ using Newtonsoft.Json.Linq;
 using System;
 using Microsoft.AspNetCore.Mvc;
 using RestSharp;
-using tp_api.InterfacesREST;
 using tp_api.ModelsControllers;
 using Models;
 using Clases;
@@ -84,7 +83,7 @@ namespace tp_api.Controllers {
         }
 
 
-        [Route("user/{email}")]
+        [HttpGet, Route("user/{email}")]
         public IActionResult GetUserByEmail([FromRoute] string email)
         {
             var con = new UsuariosController(_context);
@@ -96,7 +95,7 @@ namespace tp_api.Controllers {
 
 
         [Produces("application/json")]
-        [Route("user"), HttpPost]
+        [HttpPost, Route("user")]
         public IActionResult PostUser([FromBody] Usuario input)
         {
             var usuarios = new UsuariosController(_context);

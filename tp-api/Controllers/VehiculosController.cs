@@ -24,7 +24,7 @@ namespace tp_api.Controllers
 
         [HttpGet]
         [Produces("application/json")]
-        public IActionResult ConsultarVehiculosDisponibles(int ciudad, DateTime desde, DateTime hasta)
+        public IActionResult ConsultarVehiculosDisponibles([FromQuery] int ciudad, [FromQuery] DateTime desde, [FromQuery] DateTime hasta)
         {
             ///api/vehiculos?ciudad=2&desde=2018-06-01T00:00:00&hasta=2018-06-31T23:59:59
             var service = WService.Service;

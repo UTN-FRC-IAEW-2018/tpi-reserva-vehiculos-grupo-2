@@ -21,7 +21,7 @@ namespace tp_api.Controllers
         }
 
         // GET api/clientes/37821733/reservas
-        [Route("{dni}/reservas")]
+        [HttpGet, Route("{dni}/reservas")]
         public IActionResult ListarReservas([FromRoute] long dni)
         {
             var reservas = getReservas(dni);
