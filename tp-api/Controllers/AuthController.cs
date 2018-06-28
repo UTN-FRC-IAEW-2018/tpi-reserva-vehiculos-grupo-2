@@ -10,7 +10,7 @@ using Clases;
 
 namespace tp_api.Controllers {
     [Route("api/auth")]
-    public class CUIniciarSesion : Controller, RESTIniciarSesion  {
+    public class AuthController : Controller  {
 
 		private readonly Context _context;
 
@@ -24,13 +24,15 @@ namespace tp_api.Controllers {
         private string redirect_url;
 
 
-        public CUIniciarSesion(Context context)
+        public AuthController(Context context)
         {
             _context = context;
             redirect_url = redirect_url_frontend;
 		}
-		[Route("login")]
-		public string IniciarSesion() {
+
+
+		[HttpGet, Route("login")]
+		public string Login() {
 			// Retorna ruta de login de OAuth
 			string cliente = "grupo_nro2_client";
             string url = "http://ec2-54-87-197-49.compute-1.amazonaws.com/web/authorize?" +
@@ -38,18 +40,17 @@ namespace tp_api.Controllers {
                             "&response_type=code&state=somestate&scope=read_write";
             return url;
 		}
-        [Route("oauth")]
+
+
+        [HttpGet, Route("oauth")]
         public ActionResult OAuth()
         {
-            return Redirect(IniciarSesion());
+            return Redirect(Login());
         }
 
-        public string InicioExitoso() {
-			throw new System.Exception("Not implemented");
-		}
-
+        
 		[HttpGet("{code}"), Route("user")]
-        public IActionResult Get(string code)
+        public IActionResult GetUser([FromRoute] string code)
         {
             if (Request.Method != "GET")
                 return Json("No era aca");
@@ -82,8 +83,9 @@ namespace tp_api.Controllers {
             
         }
 
+
         [Route("user/{email}")]
-        public IActionResult GetByMail(string email)
+        public IActionResult GetUserByEmail([FromRoute] string email)
         {
             var con = new UsuariosController(_context);
             var us = con.Get(email);
@@ -92,9 +94,10 @@ namespace tp_api.Controllers {
             return Json(us);
         }
 
+
         [Produces("application/json")]
-        [Route("user"), HttpPost()]
-        public IActionResult Post([FromBody] Usuario input)
+        [Route("user"), HttpPost]
+        public IActionResult PostUser([FromBody] Usuario input)
         {
             var usuarios = new UsuariosController(_context);
             var usuario = usuarios.Get(input.Email, input.AccessToken);
@@ -139,6 +142,7 @@ namespace tp_api.Controllers {
             return user;
         }
 
+
         private Token GetToken(string code)
         {
             var client = new RestClient("http://ec2-54-87-197-49.compute-1.amazonaws.com/v1/oauth/tokens");
@@ -158,19 +162,6 @@ namespace tp_api.Controllers {
 
             return t;
         }
-
-        /*
-		public Cliente CrearCliente() {
-			throw new System.Exception("Not implemented");
-		}*/
-
-		public void InicioExitoso(ref string mensaje) { 
-			
-		}
-
-		public void InicioFallido(ref string mensaje) {
-			
-		}
 
 
 	}

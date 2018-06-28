@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace Clases
 {
+
     public class NuevoCliente
     {
         public string email { get; set; }
@@ -12,4 +13,5 @@ namespace Clases
         public string nom { get; set; }
         public int nrodoc { get; set; }
     }
+
 }

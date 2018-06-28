@@ -9,7 +9,7 @@ using Clases;
 
 namespace tp_api.Controllers
 {
-    [Produces("application/json")]
+    [Route("api/vehiculos")]
     public class VehiculosController : Controller
     {
         /// <summary>
@@ -21,8 +21,10 @@ namespace tp_api.Controllers
         /// <param name="desde">desde: 'YYYY-MM-DDTHH:mm:ss' (2016-12-31T23:59:59)</param>
         /// <param name="hasta">hasta: 'YYYY-MM-DDTHH:mm:ss' (2016-12-31T23:59:59)</param>
         /// <returns></returns>
-        [Route("api/vehiculos")]
-        public IActionResult Get(int ciudad, DateTime desde, DateTime hasta)
+
+        [HttpGet]
+        [Produces("application/json")]
+        public IActionResult ConsultarVehiculosDisponibles(int ciudad, DateTime desde, DateTime hasta)
         {
             ///api/vehiculos?ciudad=2&desde=2018-06-01T00:00:00&hasta=2018-06-31T23:59:59
             var service = WService.Service;

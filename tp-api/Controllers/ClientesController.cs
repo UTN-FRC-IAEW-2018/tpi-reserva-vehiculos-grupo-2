@@ -12,25 +12,26 @@ namespace tp_api.Controllers
 {
     [Produces("application/json")]
     [Route("api/clientes")]
-    public class ReservasController : Controller
+    public class ClientesController : Controller
     {
         private Context _context;
-        public ReservasController(Context context)
+        public ClientesController(Context context)
         {
             _context = context;
         }
 
         // GET api/clientes/37821733/reservas
         [Route("{dni}/reservas")]
-        public IActionResult ListarReservas(long dni)
+        public IActionResult ListarReservas([FromRoute] long dni)
         {
             var reservas = getReservas(dni);
             return Json(reservas);
         }
 
+
         // GET api/clientes/37821733/reservas/2
-        [HttpGet(), Route("{dni}/reservas/{id}")]
-        public IActionResult MostrarReserva(long dni, int id)
+        [HttpGet, Route("{dni}/reservas/{id}")]
+        public IActionResult MostrarReserva([FromRoute] long dni, [FromRoute] int id)
         {
             var reserva = getReserva(dni, id);
             if (reserva == null)
@@ -47,8 +48,9 @@ namespace tp_api.Controllers
             return Json(ar);
         }
 
+
         // POST api/clientes/37821733/reservas
-        [HttpPost(), Route("{dni}/reservas")]
+        [HttpPost, Route("{dni}/reservas")]
         public IActionResult CrearReserva([FromBody] CrearReservaPOSTRequest input, [FromRoute] int dni)
         {
             var service = WService.Service;
@@ -86,7 +88,9 @@ namespace tp_api.Controllers
 
             //Devolvemos la reserva almacenada local.
             return Json(db_reserva);
-        } 
+        }
+
+
         public class CrearReservaPOSTRequest
         {
             public string token { get; set; }
@@ -127,6 +131,8 @@ namespace tp_api.Controllers
         {
             return getReservas(dni).Where(x => x.Id == id).FirstOrDefault();
         }
+
+
         private List<Reserva> getReservas(long dni)
         {
             var us_controller = new UsuariosController(_context);
@@ -138,9 +144,7 @@ namespace tp_api.Controllers
             var res_controller = new ModelsControllers.ReservasController(_context);
             return res_controller.GetByUsuario(us);
         }
-
-
-        
+      
         
     }
 }

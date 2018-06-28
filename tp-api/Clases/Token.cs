@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace Clases
 {
+
     public class Token
     {
         public string TokenAccess { get; set; }
@@ -12,4 +13,5 @@ namespace Clases
         public string Refresh { get; set; }
         public bool Active { get; set; }
     }
+
 }

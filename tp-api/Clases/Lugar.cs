@@ -15,6 +15,8 @@ namespace Clases
                 setLugares();
             return values;
         }
+
+
         private static void setLugares()
         {
             values = new List<Lugar>()
@@ -24,11 +26,11 @@ namespace Clases
                     new Lugar(){ Id = "T", Nombre = "TerminalBus"}
                 };
         }
-
-
+        
 
         public String Id { get; set; }
         public String Nombre { get; set; }
+
 
         public static LugarRetiroDevolucion getWSLugar(string id)
         {
@@ -44,6 +46,7 @@ namespace Clases
             return LugarRetiroDevolucion.TerminalBuses;
         }
 
+
         public static string GetId(LugarRetiroDevolucion l)
         {
             switch (l)
@@ -57,5 +60,7 @@ namespace Clases
             }
             return "N";
         }
+
+
     }
 }

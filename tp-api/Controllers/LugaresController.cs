@@ -8,15 +8,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace tp_api.Controllers
 {
-    [Produces("application/json")]
+    
     [Route("api/lugares")]
     public class LugaresController : Controller
     {
-        public IActionResult Get(int dni)
+        [HttpGet]
+        [Produces("application/json")]
+        public IActionResult GetLugares()
         {
             return Json(Lugar.getList());
         }
 
-        
     }
 }

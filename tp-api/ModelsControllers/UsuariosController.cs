@@ -12,10 +12,12 @@ namespace tp_api.ModelsControllers
     {
         private readonly Context _context;
 
+
         public UsuariosController(Context context)
         {
             _context = context;
         }
+
 
         public Usuario GetByOAuth(OAuthUser user)
         {
@@ -41,26 +43,32 @@ namespace tp_api.ModelsControllers
             }
 
             return us;
-
         }
+
 
         public Usuario Get(string email, string token)
         {
             return _context.Usuarios.Where(x => x.Email == email && x.AccessToken == token).FirstOrDefault();
         }
 
+
         public Usuario Get(string email)
         {
             return _context.Usuarios.Where(x => x.Email == email).FirstOrDefault();
         }
+
+
         public Usuario GetByDni(long dni)
         {
             return _context.Usuarios.Where(x => x.DNI == dni).FirstOrDefault();
         }
+
+
         public Usuario GetByToken(string token)
         {
             return _context.Usuarios.Where(x => x.AccessToken == token).FirstOrDefault();
         }
+
 
         public List<Usuario> GetReservas(long dni)
         {
@@ -72,5 +80,7 @@ namespace tp_api.ModelsControllers
 
             return new List<Usuario>();
         }
+
+
     }
 }
