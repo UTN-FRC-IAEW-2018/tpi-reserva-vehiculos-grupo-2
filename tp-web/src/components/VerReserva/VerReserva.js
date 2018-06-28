@@ -1,49 +1,32 @@
 import React, { Component } from 'react';
-import api from '../../api';
+import moment from 'moment';
 
 
 class VerReserva extends Component {
   constructor(props) {
     super(props);
-    let reserva;
-    if(this.props.history.location.state &&
-      this.props.history.location.state.reserva_id) {
-      reserva = this.props.history.location.state.reserva_id;
-    } else {
+    if(!this.props.reserva) {
       this.props.history.push('reservas');
     }
     this.state = {
-      reserva_id: reserva,
-      reserva: undefined,
       error: undefined
     }
   }
 
-  loadReserva() {
-    api.get('/api/vehiculos/' + this.state.reserva_id)
-      .then(res => {
-        const reservaData = res.data;
-        this.setState({ reserva: reservaData});
-      })
-      .catch((error) => {
-        this.setState({ error: "Hubo un problema al cargar su información." });
-      })
-  }
-
-  componentDidMount() {
-    this.loadReserva();
-  }
-
-
   render() {
+    const reserva = this.props.reserva;
     return (
       <div>
-        <h1>Reserva</h1>
-        <h2>Nombre</h2>
-        <p>Descripción</p>
-        <b>$230</b>
+        <h1>Reserva {reserva.codigo}</h1>
+        <p><b>Fecha de retiro:</b> {moment(reserva.fechaRetiro).format('DD/MM/YYYY HH:mm')}</p>
+        <p><b>Lugar de retiro:</b> {reserva.lugarRetiro}</p>
+        <p><b>Fecha de devolución:</b> {moment(reserva.fechaDevolucion).format('DD/MM/YYYY HH:mm')}</p>
+        <p><b>Lugar de devolución:</b> {reserva.lugarDevolucion}</p>
+        <h4><b>Estado:</b> {reserva.fechaCancelacion ? "Cancelada" : "Activa"}</h4>
+        <h4><b>Total:</b> {'$' + parseFloat(reserva.totalReservaPropia).toFixed(2)}</h4>
         <hr />
         <span style={{color: "red"}}>{this.state.error}</span>
+        <button className="btn btn-default" onClick={this.props.return}>Volver a Mis Reservas</button>
       </div>
     );
   }
