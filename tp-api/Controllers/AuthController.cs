@@ -52,8 +52,7 @@ namespace tp_api.Controllers {
 		[HttpGet("{code}"), Route("user")]
         public IActionResult GetUser(string code)
         {
-            if (Request.Method != "GET")
-                return Json("No era aca");
+
             if (code == null)
                 return BadRequest("Por aca no. Sin codigo");
             var token = GetToken(code); // Pedir token
@@ -95,8 +94,8 @@ namespace tp_api.Controllers {
         }
 
 
-        [HttpPost, Route("user")]
-        public IActionResult PostUser([FromBody] Usuario input)
+        [HttpPut, Route("user")]
+        public IActionResult PutUser([FromBody] Usuario input)
         {
             var usuarios = new UsuariosController(_context);
             var usuario = usuarios.Get(input.Email, input.AccessToken);

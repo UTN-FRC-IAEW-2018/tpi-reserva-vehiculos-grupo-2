@@ -27,7 +27,7 @@ namespace tp_api.Controllers
             return Json(reservas);
         }
 
-
+        //ESTE METODO NO ESTÁ EN USO. SE PODRÍA DEPRECAR
         // GET api/clientes/37821733/reservas/2
         [HttpGet, Route("{dni}/reservas/{id}")]
         public IActionResult MostrarReserva([FromRoute] long dni, [FromRoute] int id)
