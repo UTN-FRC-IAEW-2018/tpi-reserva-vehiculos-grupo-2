@@ -34,7 +34,7 @@ class RegistrarCliente extends Component {
         Nombre: this.state.nombre,
         Apellido: this.state.apellido
       });
-      api.post('/auth/user', cliente, {
+      api.put('/auth/user', cliente, {
         headers: {
           'Content-Type': 'application/json',
         }
