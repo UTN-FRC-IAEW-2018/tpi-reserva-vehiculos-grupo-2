@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from "react-redux";
-import queryString from 'query-string';
 import {auth} from "../../actions";
 
 
@@ -9,8 +8,9 @@ import {auth} from "../../actions";
 class CallbackOAuth extends Component {
   constructor(props) {
     super(props);
-    const params = queryString.parse(props.location.search);
-    this.getToken(params.code);
+    const urlParams = new URLSearchParams(props.location.search)
+    const parametro = urlParams.get('code');
+    this.getToken(parametro);
   }
 
   getToken(code) {
