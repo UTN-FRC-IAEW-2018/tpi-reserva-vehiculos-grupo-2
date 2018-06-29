@@ -29,6 +29,7 @@ namespace tp_api.Controllers
 
         //ESTE METODO NO ESTÁ EN USO. SE PODRÍA DEPRECAR
         // GET api/clientes/37821733/reservas/2
+        /*
         [HttpGet, Route("{dni}/reservas/{id}")]
         public IActionResult MostrarReserva([FromRoute] long dni, [FromRoute] int id)
         {
@@ -46,6 +47,7 @@ namespace tp_api.Controllers
             Object[] ar = new Object[] { reserva, soap_reserva };
             return Json(ar);
         }
+        */
 
 
         // POST api/clientes/37821733/reservas
@@ -110,7 +112,6 @@ namespace tp_api.Controllers
             if (reserva == null)
                 return NotFound("No se encontro");
 
-
             var service = WService.Service;
             var req = new CancelarReservaRequest();
             req.CodigoReserva = reserva.Codigo;
@@ -123,7 +124,7 @@ namespace tp_api.Controllers
             _context.SaveChanges();
 
             Object[] ar = new Object[] { reserva, response.CancelarReservaResult.Reserva };
-            return Json(ar);
+            return Json( reserva );
         }
 
         //Metodos Privados.

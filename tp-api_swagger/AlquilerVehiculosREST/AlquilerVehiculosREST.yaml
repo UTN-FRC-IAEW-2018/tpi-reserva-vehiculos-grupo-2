@@ -1,0 +1,377 @@
+---
+swagger: "2.0"
+info:
+  title: "AlquilerVehiculosREST"
+  description: "La presente es documentación del servicio AlquilerVehiculos desarrollado\
+    \ por el grupo 2, como requerimiento al TPI de la cátedra Integración de Aplicaciones\
+    \ en Entornos Web (5to Nivel de la carrera Ingeniería en Sistemas de Informació\
+    n en UTN FRC)."
+  version: "1.0.0"
+basePath: "/"
+schemes:
+- "http"
+paths:
+  /api/clientes/{dni}/reservas/{id}:
+    delete:
+      description: "Cancelar una reserva realizada por un cliente."
+      operationId: "cancelar_reserva"
+      parameters:
+      - name: "dni"
+        in: "path"
+        type: "integer"
+        format: "int32"
+        required: false
+      - name: "id"
+        in: "path"
+        type: "integer"
+        format: "int32"
+        required: false
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Reserva"
+        404:
+          description: "Not Found"
+          schema:
+            $ref: "#/definitions/NotFound"
+  /api/paises/{pais}/ciudades/:
+    get:
+      description: "Consultar las ciudades para un país."
+      operationId: "consultar_ciudades"
+      parameters:
+      - name: "pais"
+        in: "path"
+        type: "integer"
+        format: "int32"
+        required: false
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Ciudad"
+  /api/lugares:
+    get:
+      description: "Consultar los lugares en los que el cliente puede retirar y devolver\
+        \ los vehículos alquilados."
+      operationId: "consultar_lugares_de_entrega_y_devolución"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Lugar"
+  /api/paises/:
+    get:
+      description: "Consultar los países en los que el alquilador ofrece servicios\
+        \ por el alquilador."
+      operationId: "consultar_países"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Pais"
+  /api/auth/user/{code}:
+    get:
+      description: "Obtener los datos de un usuario (cliente) de la empersa de turismo\
+        \ por medio del su código de identificación de OAuth."
+      operationId: "consultar_usuario_por_código_OAuth"
+      parameters:
+      - name: "code"
+        in: "path"
+        type: "string"
+        required: false
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/UsuarioExistente"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/BadRequest"
+  /api/auth/user/{email}:
+    get:
+      description: "Obtener los datos de un usuario (cliente) de la empersa de turismo\
+        \ por medio de su email."
+      operationId: "consultar_usuario_por_email"
+      parameters:
+      - name: "email"
+        in: "path"
+        type: "string"
+        required: false
+      responses:
+        404:
+          description: "Not Found"
+          schema:
+            $ref: "#/definitions/NotFound"
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Usuario"
+  /api/vehiculos/:
+    get:
+      description: "Consultar los vehículos disponibles para una ciudad seleccionada."
+      operationId: "consultar_vehículos_disponibles"
+      parameters:
+      - name: "ciudad"
+        in: "query"
+        type: "integer"
+        format: "int32"
+        required: false
+      - name: "desde"
+        in: "query"
+        type: "string"
+        required: false
+      - name: "hasta"
+        in: "query"
+        type: "string"
+        required: false
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/VehiculoModel"
+  /api/clientes/{dni}/reservas:
+    get:
+      description: "Consultar las reservas realizadas por un cliente."
+      operationId: "consutlar_reservas_realizadas"
+      parameters:
+      - name: "dni"
+        in: "path"
+        type: "integer"
+        format: "int32"
+        required: false
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Reserva"
+  /api/clientes/{dni}/reservas/:
+    post:
+      description: "Crear la reserva de un vehiculo para un cliente determinado"
+      operationId: "crear_reserva"
+      parameters:
+      - name: "dni"
+        in: "path"
+        type: "integer"
+        format: "int32"
+        required: false
+      - in: "body"
+        name: "crearreservapostrequest"
+        schema:
+          $ref: "#/definitions/CrearReservaPOSTRequest"
+      responses:
+        404:
+          description: "Not Found"
+          schema:
+            $ref: "#/definitions/NotFound"
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Reserva"
+  /api/auth/login:
+    get:
+      description: "Iniciar sesión por un cliente mediante la autenticación por OAuth"
+      operationId: "iniciar_sesion"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/URL"
+  /api/auth/user:
+    put:
+      description: "Modificar los datos de un usuario (cliente) de la empresa"
+      operationId: "modificar_usuario"
+      parameters:
+      - in: "body"
+        name: "usuario"
+        schema:
+          $ref: "#/definitions/Usuario"
+      responses: {}
+definitions:
+  VehiculoModel:
+    type: "object"
+    properties:
+      CantidadDisponible:
+        type: "number"
+      CantidadPuertas:
+        type: "number"
+      CiudadId:
+        type: "number"
+      Id:
+        type: "number"
+      Marca:
+        type: "string"
+      Modelo:
+        type: "string"
+      PrecioPorDia:
+        type: "string"
+      Puntaje:
+        type: "string"
+      TieneAireAcon:
+        type: "boolean"
+      TieneDireccion:
+        type: "boolean"
+      TipoCambio:
+        type: "string"
+      VehiculoCiudadId:
+        type: "number"
+  Lugar:
+    type: "object"
+    properties:
+      Id:
+        type: "string"
+      Nombre:
+        type: "string"
+  NotFound:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      message:
+        type: "string"
+  Pais:
+    type: "object"
+    properties:
+      Id:
+        type: "number"
+      Nombre:
+        type: "string"
+  Reserva:
+    type: "object"
+    properties:
+      Id:
+        type: "integer"
+        format: "int32"
+      ExtId:
+        type: "integer"
+        format: "int32"
+      Codigo:
+        type: "string"
+      FechaCancelacion:
+        type: "string"
+        format: "date-time"
+      FechaDevolucion:
+        type: "string"
+        format: "date-time"
+      FechaRetiro:
+        type: "string"
+        format: "date-time"
+      LugarRetiro:
+        type: "string"
+      LugarDevolucion:
+        type: "string"
+      TotalReserva:
+        type: "decimal"
+      TotalReservaPropia:
+        type: "decimal"
+      VehiculoXCiudadId:
+        type: "integer"
+        format: "int32"
+      UserId:
+        type: "integer"
+        format: "int32"
+      DNI:
+        type: "integer"
+        format: "int64"
+  Ciudad:
+    type: "object"
+    properties:
+      Nombre:
+        type: "string"
+      Id:
+        type: "number"
+      PaisId:
+        type: "number"
+  UsuarioNuevo:
+    type: "object"
+    properties:
+      email:
+        type: "string"
+      token:
+        type: "number"
+      nuevo:
+        type: "boolean"
+  URL:
+    type: "object"
+    properties:
+      url:
+        type: "string"
+  Usuario:
+    type: "object"
+    properties:
+      UsuarioId:
+        type: "integer"
+        format: "int32"
+      Username:
+        type: "string"
+      Nombre:
+        type: "string"
+      Apellido:
+        type: "string"
+      DNI:
+        type: "integer"
+        format: "int64"
+      Email:
+        type: "string"
+      AccessToken:
+        type: "string"
+      RefreshToken:
+        type: "string"
+      TokenExpiration:
+        type: "string"
+        format: "date-time"
+  UsuarioExistente:
+    type: "object"
+    properties:
+      email:
+        type: "string"
+      token:
+        type: "number"
+      nuevo:
+        type: "boolean"
+      dni:
+        type: "number"
+      nombre:
+        type: "string"
+      username:
+        type: "string"
+      apellido:
+        type: "string"
+  CrearReservaPOSTRequest:
+    type: "object"
+    properties:
+      token:
+        type: "string"
+      desde:
+        type: "string"
+        format: "date-time"
+      hasta:
+        type: "string"
+        format: "date-time"
+      lugarOrigen:
+        type: "string"
+      lugarDestino:
+        type: "string"
+      idVehCiud:
+        type: "integer"
+        format: "int32"
+  BadRequest:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      message:
+        type: "string"
